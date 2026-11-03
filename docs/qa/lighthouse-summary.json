@@ -1,0 +1,50 @@
+{
+  "tool": "Lighthouse 13.6.0 (npm, installed outside the repo), headless Chromium, local static server http://127.0.0.1/, one run per preset",
+  "note": "Single runs on a cloud container, not a phone or a CDN. bf-cache is blocked by the dev server sending Cache-Control: no-store; the network dependency tree insight reflects ~90 unbundled ES module files.",
+  "runs": {
+    "mobile": {
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": "1.7\u00a0s",
+        "LCP": "1.7\u00a0s",
+        "TBT": "0\u00a0ms",
+        "CLS": "0",
+        "SpeedIndex": "1.7\u00a0s"
+      },
+      "requests": 84,
+      "transferKB": 488,
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessC",
+      "notPassing": [
+        "bf-cache",
+        "network-dependency-tree-insight"
+      ]
+    },
+    "desktop": {
+      "scores": {
+        "performance": 100,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "FCP": "0.4\u00a0s",
+        "LCP": "0.4\u00a0s",
+        "TBT": "0\u00a0ms",
+        "CLS": "0",
+        "SpeedIndex": "0.4\u00a0s"
+      },
+      "requests": 84,
+      "transferKB": 488,
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessC",
+      "notPassing": [
+        "bf-cache",
+        "network-dependency-tree-insight"
+      ]
+    }
+  }
+}

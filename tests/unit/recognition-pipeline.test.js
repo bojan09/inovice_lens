@@ -364,3 +364,13 @@ test('session restore: a saved result is injected without running the runner', (
   assert.throws(() => s.restore(item('b'), { status: 'extracting' }), /Cannot restore/);
   assert.equal(s.retry('a'), true, 'a restored file can be re-recognized');
 });
+
+test('policy.enhance=false: a weak page is NOT retried with the enhanced image (setting honoured); default still retries', async () => {
+  const weak = (c) => words(['faint', 'text'], 40);
+  const calls = [];
+  const engines = { ...fakeEngines({ ocrWords: weak, enhanceCalls: calls }), coverage: async () => 1 };
+  await recognizeDocument({ file: file(), kind: 'png', engines, policy: { ...P, enhance: false } });
+  assert.deepEqual(calls, []);
+  await recognizeDocument({ file: file(), kind: 'png', engines, policy: P });
+  assert.equal(calls.length, 1);
+});

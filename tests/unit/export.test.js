@@ -131,9 +131,9 @@ test('CSV: BOM + CRLF, exact decimal text, and Python csv reads back the same ce
   const dir = tmp(); const f = join(dir, 'a.csv'); writeFileSync(f, buf);
   const out = py('import csv,sys,json;print(json.dumps(list(csv.reader(open(sys.argv[1],encoding="utf-8-sig",newline=""))), ensure_ascii=False))', f);
   const rows = JSON.parse(out.stdout);
-  assert.deepEqual(rows[0], ['#', 'Description', 'Qty', 'Unit price', 'Total']);
-  assert.deepEqual(rows[1], ['1', 'Spéciale “quote”, with, commas\nand a newline', '2', '80.00', '160.00'], 'quotes, commas, newlines and Unicode survive');
-  assert.deepEqual(rows[2], ['2', 'Product B', '1', '85.00', '85.00']);
+  assert.deepEqual(rows[0], ['#', 'Description', 'Qty', 'Unit price', 'Total', 'Currency']);
+  assert.deepEqual(rows[1], ['1', 'Spéciale “quote”, with, commas\nand a newline', '2', '80.00', '160.00', 'EUR'], 'quotes, commas, newlines and Unicode survive; the currency has its own column');
+  assert.deepEqual(rows[2], ['2', 'Product B', '1', '85.00', '85.00', 'EUR']);
 });
 
 test('XLSX: numeric cells, number formats, real dates, Unicode; openpyxl and LibreOffice both open it', { skip: !HAVE.openpyxl }, async () => {
@@ -157,16 +157,16 @@ print(json.dumps(out,ensure_ascii=False,default=str))`;
   assert.equal(o.summary['Total amount'][2], '#,##0.00');
   assert.match(o.summary['Invoice date'][0], /^2026-11-03/);
   assert.equal(o.summary['Invoice date'][1], 'd', 'a real date cell');
-  assert.deepEqual(o.items[1].slice(0, 1).concat(o.items[1].slice(2)), [1, 2, 80, 160]);
-  assert.deepEqual(o.item_types[0].slice(2), ['n', 'n', 'n']);
-  assert.deepEqual(o.items[2], [2, 'Product B', 1, 85, 85]);
+  assert.deepEqual(o.items[1].slice(0, 1).concat(o.items[1].slice(2)), [1, 2, 80, 160, 'EUR']);
+  assert.deepEqual(o.item_types[0].slice(2), ['n', 'n', 'n', 's']);
+  assert.deepEqual(o.items[2], [2, 'Product B', 1, 85, 85, 'EUR']);
   if (HAVE.soffice) {
     const conv = spawnSync('soffice', ['--headless', '--convert-to', 'csv:Text - txt - csv (StarCalc):44,34,76,1,,0,false,true,false,false,false,-1', '--outdir', dir, f], { encoding: 'utf8', timeout: 120000 });
     assert.equal(conv.status, 0, conv.stderr);
     const csvs = readdirSync(dir).filter((n) => n.endsWith('.csv'));
     assert.ok(csvs.length >= 2, `LibreOffice opened the workbook and wrote its sheets (${csvs.join(', ')})`);
     const items = readFileSync(join(dir, csvs.find((n) => /Line/.test(n))), 'utf8');
-    assert.match(items, /\n2,Product B,1,85,85\n/, "LibreOffice reads the amounts as numbers");
+    assert.match(items, /\n2,Product B,1,85,85,EUR\n/, "LibreOffice reads the amounts as numbers");
   }
 });
 
@@ -347,7 +347,7 @@ print(json.dumps({'sheets':wb.sheetnames,'docs':[[c.value for c in r] for r in d
 test('consolidated CSV: source file column, exact text, BOM', async () => {
   const r = await exportCombined({ format: 'csv', entries: twoDocs(), csvTable: 'items', now: new Date('2026-11-03T00:00:00Z') });
   assert.equal(r.filename, 'invoicelens-consolidated_items_2026-11-03.csv');
-  assert.match(r.text, /^﻿Source file,#,Description,Qty,Unit price,Total\r\nfirst\.png,1,Widget,1,100,100\r\n/);
+  assert.match(r.text, /^﻿Source file,#,Description,Qty,Unit price,Total,Currency\r\nfirst\.png,1,Widget,1,100,100,EUR\r\n/);
 });
 
 test('combined PDF: page count is the sum, pages are labelled with their source, order is kept (poppler)', { skip: !HAVE.poppler }, async () => {

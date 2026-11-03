@@ -1,6 +1,6 @@
 // storageMeter.js - shows the browser's own storage estimate (navigator.storage.estimate()).
-// Phase 1 persists nothing but the theme preference, so usage is whatever the browser reports
-// for this origin. If the API is unavailable the meter says so instead of showing a number.
+// Usage is whatever the browser reports for this site (saved projects, offline files and settings all count); nothing is estimated here.
+// If the API is unavailable the meter says so instead of showing a number.
 
 import { formatBytes, usageFraction } from '../format.js';
 

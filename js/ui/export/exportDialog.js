@@ -15,7 +15,7 @@ const MODE_HELP = {
   structured: 'Rebuilt from your corrected values. Real text and tables; it does not copy the original layout.',
 };
 
-export function createExportDialog({ workspace, store, session, engines, toaster, srLive }) {
+export function createExportDialog({ workspace, store, session, engines, toaster, srLive, settings = null }) {
   let ids = [];
   let selected = new Set();
   let state = { combine: false, labelPages: true, pagesFor: null, format: 'pdf', mode: 'structured', pages: new Set(), includeNotes: true, includeText: true, textLayer: true, csvTable: null, stem: '' };
@@ -227,7 +227,7 @@ export function createExportDialog({ workspace, store, session, engines, toaster
       if (e?.name === 'AbortError' || signal.aborted || my !== runId) return;
       result = null;
       setBusy(false, '');
-      err.textContent = `Export failed: ${e.message || 'unknown error'}`;
+      err.textContent = `Export failed: ${navigator.onLine === false ? 'You are offline and the export files are not stored on this device yet. Download them once in Settings > Storage & offline.' : e.message || 'unknown error'}`;
       preview.replaceChildren();
     }
   }
@@ -329,6 +329,8 @@ export function createExportDialog({ workspace, store, session, engines, toaster
       selected = new Set(preselect ? preselect.filter((i) => ids.includes(i)) : ids);
       const e1 = selected.size === 1 ? entryOf([...selected][0]) : null;
       state = { ...state, pages: new Set(e1 ? e1.doc.pages.map((p) => p.source) : []), pagesFor: e1?.id ?? null, stem: '', csvTable: null };
+      const d = settings?.value.export; // Settings > Export defaults
+      if (d) state = { ...state, format: d.format, mode: d.format === 'pdf' ? d.pdfMode : 'structured', includeNotes: d.includeNotes, includeText: d.includeText, textLayer: d.textLayer, labelPages: d.labelPages, combine: false };
       if (!FORMATS[state.format].modes.includes(state.mode)) state.mode = 'structured';
       title.textContent = 'Export';
       renderControls();

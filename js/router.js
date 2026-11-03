@@ -21,3 +21,11 @@ export function parseEditorId(hash) {
   const m = /^#\/?editor\/(f\d+)\/?$/.exec(hash || '');
   return m ? m[1] : null;
 }
+
+export const SETTINGS_SECTIONS = Object.freeze(['general', 'ocr', 'export', 'storage', 'appearance', 'processing']);
+
+/** "#/settings/ocr" -> "ocr"; anything else (including unknown sections) -> "general". */
+export function parseSettingsSection(hash) {
+  const m = /^#\/?settings\/([a-z-]+)\/?$/.exec(hash || '');
+  return m && SETTINGS_SECTIONS.includes(m[1]) ? m[1] : 'general';
+}

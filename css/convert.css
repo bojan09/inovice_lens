@@ -100,13 +100,6 @@
 .features h2 { font-size: var(--fs-md); font-weight: var(--fw-semibold); }
 .features p { margin-top: 2px; font-size: var(--fs-sm); color: var(--color-text-muted); }
 
-.phase-note {
-  margin: var(--space-8) auto 0;
-  max-width: 640px;
-  text-align: center;
-  font-size: var(--fs-sm);
-  color: var(--color-text-muted);
-}
 
 /* ---------- Mobile home (hidden above 640px) ---------- */
 .mobile-home { display: none; }
@@ -186,16 +179,6 @@
 .coming h2 { font-size: var(--fs-lg); font-weight: var(--fw-semibold); }
 .coming p { font-size: var(--fs-md); color: var(--color-text-muted); }
 
-/* ---------- Busy spinner (button label stays; spinner is decorative) ---------- */
-.spinner {
-  width: 14px; height: 14px;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  animation: spin 700ms linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
 /* ---------- Tablet ---------- */
 @media (max-width: 1023.98px) {
   .features { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-4); max-width: 520px; }
@@ -211,7 +194,7 @@
 /* ---------- Mobile ---------- */
 @media (max-width: 639.98px) {
   .hero { display: none; }
-  .features, .phase-note { display: none; }
+  .features { display: none; }
   .mobile-home { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: var(--space-4); }
   .mh-icon { width: 40px; height: 40px; color: var(--color-accent-text); stroke-width: 1.5; }
   .mh-title { margin-top: var(--space-3); font-size: var(--fs-xl); font-weight: var(--fw-bold); }

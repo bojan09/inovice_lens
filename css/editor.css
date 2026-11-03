@@ -25,7 +25,6 @@
 .save-dot { width: 8px; height: 8px; border-radius: var(--radius-full); background: var(--color-progress-track); }
 .save-state[data-state="dirty"] { color: var(--chip-warning-fg); }
 .save-state[data-state="dirty"] .save-dot { background: var(--color-warning); }
-.soon { margin-left: var(--space-1); padding-left: var(--space-2); border-left: 1px solid currentColor; font-size: var(--fs-xs); font-weight: var(--fw-regular); }
 .ed-stale { flex-wrap: wrap; align-items: center; background: var(--banner-warning-bg); color: var(--chip-warning-fg); }
 .ed-stale .stale-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 

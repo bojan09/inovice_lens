@@ -18,19 +18,26 @@ import { createExportDialog } from './ui/export/exportDialog.js';
 import { createBatchView } from './ui/batch/batchView.js';
 import { createProjectsView } from './ui/projects/projectsView.js';
 import { createProjectsController } from './projects/controller.js';
+import { createSettings, ocrPolicy } from './settings.js';
+import { createSettingsView } from './ui/settings/settingsView.js';
+import { createPwa } from './pwa.js';
 
 const $ = (id) => document.getElementById(id);
 
 const store = createStore();
 const toaster = createToaster($('toasts'));
 
-initThemeMenu({ button: $('theme-btn'), menu: $('theme-menu'), buttonIcon: $('theme-btn-icon') });
+const settings = createSettings();
+const theme = initThemeMenu({ button: $('theme-btn'), menu: $('theme-menu'), buttonIcon: $('theme-btn-icon') });
+const applyMotion = () => { document.documentElement.dataset.motion = settings.value.appearance.motion === 'reduce' ? 'reduce' : ''; };
+applyMotion();
+settings.subscribe(applyMotion);
 
 let editor = null; // created below, once the workspace exists; routes can fire during initNav()
 const nav = initNav({ onRoute: (view) => { if (view === 'editor') editor?.open(parseEditorId(location.hash)); else editor?.close(); } });
 
 // Recognition: one document at a time (a single wasm OCR worker; bounded to keep phones responsive).
-const real = createRealRunner();
+const real = createRealRunner({ getPolicy: () => ocrPolicy(settings.value) });
 const session = createRecognitionSession({ runner: real.runner, concurrency: 1 });
 
 // new files are queued automatically; removed files are cancelled and forgotten
@@ -62,8 +69,8 @@ session.subscribe((snap) => {
 // Editable documents live for the whole page session, so edits survive moving between views.
 const workspace = createWorkspace({ store, session });
 const srLive = (m) => { $('sr-live').textContent = m; };
-const exporter = createExportDialog({ workspace, store, session, engines: real.engines, toaster, srLive });
-const projects = createProjectsController({ store, session, workspace, engines: real.engines });
+const exporter = createExportDialog({ workspace, store, session, engines: real.engines, toaster, srLive, settings });
+const projects = createProjectsController({ store, session, workspace, engines: real.engines, debounceMs: () => settings.value.processing.autosaveSeconds * 1000 });
 editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive, onExport: (ids, from) => exporter.open(ids, from), saveInfo: () => projects.status });
 projects.subscribe(() => editor.refreshSave());
 
@@ -98,6 +105,17 @@ projects.subscribe(renderProjectStatus);
 store.subscribe(renderProjectStatus);
 renderProjectStatus();
 nav.onShow?.((v) => { if (v === 'projects') projectsUi.refresh(); });
+
+// Offline support (service worker) + Settings
+const pwa = createPwa();
+pwa.register();
+const updateBar = $('update-bar');
+pwa.subscribe(() => { updateBar.hidden = !pwa.updateReady; });
+$('update-btn').addEventListener('click', () => {
+  if (workspace.hasUnsavedEdits() && !(projects.status.project && projects.status.state === 'saved') && !confirm('Reloading to update discards edits that are not saved to a project. Reload now?')) return;
+  pwa.applyUpdate();
+});
+createSettingsView({ root: $('settings-root'), settings, theme, projects, pwa, toaster, srLive });
 
 // Convert page: Export is available as soon as one file has a result
 const convertBtn = $('convert-btn');
@@ -158,7 +176,7 @@ $('search').addEventListener('input', (e) => {
 window.addEventListener('beforeunload', (e) => {
   const st = projects.status;
   const safe = st.project && st.state === 'saved'; // edits already committed to the saved project
-  if (workspace.hasUnsavedEdits() && !safe) { e.preventDefault(); e.returnValue = ''; }
+  if (settings.value.general.warnUnsaved && workspace.hasUnsavedEdits() && !safe) { e.preventDefault(); e.returnValue = ''; }
 });
 
 // Release preview URLs when the page goes away.

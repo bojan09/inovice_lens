@@ -47,7 +47,7 @@ export function createAutosave({ repo, store, session, workspace, makeThumb, deb
     dirty = true;
     clearTimeout(timer);
     if (status.state !== 'saving') set({ state: 'idle' });
-    timer = setTimeout(saveNow, debounceMs);
+    timer = setTimeout(saveNow, typeof debounceMs === 'function' ? debounceMs() : debounceMs);
   };
 
   const unsubs = [store.subscribe(schedule), session.subscribe(schedule), workspace.subscribe(schedule)];

@@ -46,7 +46,7 @@ export async function buildCombinedPdf(results, { labelPages = true, signal, now
 export function consolidatedTables(docs, { now = new Date() } = {}) {
   const items = docs.map((d) => buildExportData(d.doc, { result: d.result, now }));
   const documents = [['Source file', 'Type', 'Supplier', 'Number', 'Issue date', 'Due date', 'Currency', 'Subtotal', 'Tax', 'Total', 'Open problems']];
-  const lines = [['Source file', '#', 'Description', 'Qty', 'Unit price', 'Total']];
+  const lines = [['Source file', '#', 'Description', 'Qty', 'Unit price', 'Total', 'Currency']];
   const notes = [['Source file', 'Severity', 'Note']];
   const keyed = [];
   for (const d of items) {
@@ -55,7 +55,7 @@ export function consolidatedTables(docs, { now = new Date() } = {}) {
     const problems = d.notes.filter((n) => n.severity !== 'info').length;
     documents.push([d.title, d.typeLabel, text('supplier') ?? text('customer'), text('number'), val(d, 'issueDate')?.text || null, val(d, 'dueDate')?.text || null, d.currency, money('subtotal'), money('tax'), money('total'), problems]);
     keyed.push(d);
-    for (const i of d.items) lines.push([d.title, i.n, i.description, i.qty.number ?? i.qty.text, i.unit.status === 'ok' ? i.unit.number : i.unit.text, i.total.status === 'ok' ? i.total.number : i.total.text]);
+    for (const i of d.items) lines.push([d.title, i.n, i.description, i.qty.number ?? i.qty.text, i.unit.status === 'ok' ? i.unit.number : i.unit.text, i.total.status === 'ok' ? i.total.number : i.total.text, d.currency ?? '']);
     for (const n of d.notes) notes.push([d.title, n.severity, n.message]);
   }
   return { documents, lines, notes, data: keyed };

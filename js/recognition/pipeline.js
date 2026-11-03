@@ -20,6 +20,7 @@ export const DEFAULT_RECOGNITION_POLICY = Object.freeze({
   lowWordConf: 60,
   minCoverage: 0.6, // share of dark marks inside recognised words; lower = text probably missed
   maxOcrPixels: 12_000_000,
+  enhance: true, // false = never try the enhanced (flattened/deskewed) pass
 });
 
 export class RecognitionError extends Error {
@@ -116,7 +117,7 @@ async function ocrPage({ canvas, index, rotation, engines, policy, signal, onFra
   // confidence, nothing found, or text covering too little of the ink on the page), and keep
   // whichever attempt recognised more confident text. Never keep it just because it ran.
   const weak = (r) => r.stats.words === 0 || r.stats.mean < policy.enhanceBelow || (r.coverage !== null && r.coverage < policy.minCoverage);
-  if (weak(best)) {
+  if (policy.enhance !== false && weak(best)) { // settings can switch the enhanced pass off entirely
     const enhanced = await engines.enhance(canvas, { signal });
     made.push(enhanced);
     throwIfAborted(signal);

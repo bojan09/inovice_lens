@@ -90,7 +90,7 @@ export function tablesOf(data) {
   if (data.docType === 'invoice' || data.docType === 'receipt') {
     out.push({
       id: 'items', name: 'Line items', header: true,
-      rows: [['#', 'Description', 'Qty', 'Unit price', 'Total'], ...data.items.map((i) => [i.n, i.description, i.qty.number ?? i.qty.text, i.unit.status === 'ok' ? i.unit.number : i.unit.text, i.total.status === 'ok' ? i.total.number : i.total.text])],
+      rows: [['#', 'Description', 'Qty', 'Unit price', 'Total', 'Currency'], ...data.items.map((i) => [i.n, i.description, i.qty.number ?? i.qty.text, i.unit.status === 'ok' ? i.unit.number : i.unit.text, i.total.status === 'ok' ? i.total.number : i.total.text, data.currency ?? ''])],
     });
   }
   if (data.docType === 'table' && data.grid.length) {
@@ -108,7 +108,7 @@ export function tablesOf(data) {
 /** CSV rows for a table: money cells use the exact canonical decimal text (never a float). */
 export function csvRows(table, data) {
   if (table.id === 'items') {
-    return [table.rows[0], ...data.items.map((i) => [i.n, i.description, i.qty.text, i.unit.status === 'ok' ? i.unit.canonical : i.unit.text, i.total.status === 'ok' ? i.total.canonical : i.total.text])];
+    return [table.rows[0], ...data.items.map((i) => [i.n, i.description, i.qty.text, i.unit.status === 'ok' ? i.unit.canonical : i.unit.text, i.total.status === 'ok' ? i.total.canonical : i.total.text, data.currency ?? ''])]; // amounts are plain decimals: the currency travels in its own column
   }
   if (table.id === 'summary') {
     return [table.rows[0], ...data.fields.filter((f) => f.text !== '').map((f) => [f.label, f.kind === 'money' && f.status === 'ok' ? f.canonical : f.text])];

@@ -173,7 +173,7 @@ print(json.dumps({'sheets':wb.sheetnames,'sum':d,'items':[[c.value for c in r] f
   assert.deepEqual(o.sum['Total amount'], [1234.5, 'n']);
   assert.deepEqual(o.sum['Subtotal'], [1234.5, 'n']);
   assert.equal(o.sum['Currency'][0], 'EUR');
-  assert.deepEqual(o.items, [[1, 'Product A', 2, 80, 160], [2, 'Product B', 1, 85, 85]]);
+  assert.deepEqual(o.items.map((r) => r.slice(0, 5)), [[1, 'Product A', 2, 80, 160], [2, 'Product B', 1, 85, 85]]);
   await context.close();
 });
 
@@ -188,7 +188,7 @@ test('Google Sheets: CSV download (BOM, exact decimals) and "Copy for pasting" p
   assert.equal(name, 'invoice-scan_line_items.csv');
   const bytes = readFileSync(path);
   assert.deepEqual([...bytes.slice(0, 3)], [0xef, 0xbb, 0xbf]);
-  assert.equal(bytes.toString('utf8').slice(1), '#,Description,Qty,Unit price,Total\r\n1,Product A,2,80.00,160.00\r\n2,Product B,1,85.00,85.00\r\n');
+  assert.equal(bytes.toString('utf8').slice(1), '#,Description,Qty,Unit price,Total,Currency\r\n1,Product A,2,80.00,160.00,EUR\r\n2,Product B,1,85.00,85.00,EUR\r\n');
   await page.selectOption('#exp-table', 'summary'); await ready(page);
   await page.click('button:has-text("Copy for pasting")');
   await page.waitForFunction(() => /Copied/.test(document.querySelector('.exp-status').textContent));

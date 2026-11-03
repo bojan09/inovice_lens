@@ -81,7 +81,13 @@ export function createRecognitionSession({ runner, concurrency = 1 } = {}) {
     }
   }
 
-  const friendly = (err) => err?.message && err.name === 'RecognitionError' ? err.message : (err?.userMessage ?? err?.message ?? 'Recognition failed.');
+  const OFFLINE = 'You are offline and the text-recognition files are not stored on this device yet. Connect once and use Settings > Storage & offline > "Download for offline use", then retry.';
+  const friendly = (err) => {
+    if (err?.message && err.name === 'RecognitionError') return err.message;
+    const loadFailure = err?.code === 'ocr-error' || /dynamically imported module|Failed to fetch|NetworkError|Load failed/i.test(err?.message ?? '');
+    if (globalThis.navigator?.onLine === false && loadFailure) return OFFLINE; // a failed program-file fetch while offline
+    return err?.userMessage ?? err?.message ?? 'Recognition failed.';
+  };
 
   function cancel(id) {
     const e = entries.get(id);

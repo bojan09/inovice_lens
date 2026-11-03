@@ -11,7 +11,7 @@ import { fingerprint } from '../intake.js';
 import { cleanProjectName, SchemaError } from './schema.js';
 import { STATUS } from '../recognition/states.js';
 
-export function createProjectsController({ store, session, workspace, engines, openDatabase = openDb, now = () => new Date() }) {
+export function createProjectsController({ store, session, workspace, engines, openDatabase = openDb, now = () => new Date(), debounceMs = 1500 }) {
   let repoP = null;
   let unavailable = null;
   const listeners = new Set();
@@ -27,7 +27,7 @@ export function createProjectsController({ store, session, workspace, engines, o
   async function auto() {
     if (autosave) return autosave;
     const r = await repo();
-    autosave = createAutosave({ repo: r, store, session, workspace, makeThumb: thumbOf, now });
+    autosave = createAutosave({ repo: r, store, session, workspace, makeThumb: thumbOf, now, debounceMs });
     autosave.subscribe(emit);
     return autosave;
   }

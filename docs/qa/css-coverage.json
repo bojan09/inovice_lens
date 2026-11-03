@@ -1,0 +1,121 @@
+{
+  "css/settings.css": {
+    "bytes": 4186,
+    "usedPct": 87.1,
+    "unusedRules": [
+      ".set-nav a:hover",
+      ".switch:focus-visible",
+      "/* user preference: always reduce motion */ html[data-motion=\"reduce\"] *, html[data-motion"
+    ]
+  },
+  "css/export.css": {
+    "bytes": 4111,
+    "usedPct": 95.8,
+    "unusedRules": []
+  },
+  "css/projects.css": {
+    "bytes": 9085,
+    "usedPct": 74.1,
+    "unusedRules": [
+      ".btn-danger:hover:not(:disabled)",
+      ".btn-danger-outline",
+      ".project-status[data-state=\"error\"]",
+      ".project-status .link-btn",
+      ".queue-state[data-state=\"paused\"]",
+      ".batch-table tr.is-edited .b-name::after",
+      ".proj-card",
+      ".pc-top",
+      ".pc-icon",
+      ".pc-title",
+      ".pc-name",
+      ".pc-meta, .pc-when",
+      ".pc-bad",
+      ".pc-thumbs",
+      ".pc-thumbs img",
+      ".pc-fileicon",
+      ".pc-actions",
+      ".dlg-list",
+      ".dlg-space.space-warn",
+      ".dlg-space.space-block"
+    ]
+  },
+  "css/layout.css": {
+    "bytes": 5627,
+    "usedPct": 86.7,
+    "unusedRules": [
+      ".nav-link:hover",
+      ".search:focus-within",
+      ".sidebar.is-open"
+    ]
+  },
+  "css/convert.css": {
+    "bytes": 12769,
+    "usedPct": 84.5,
+    "unusedRules": [
+      ".dropzone.is-dragover",
+      ".reject-list:empty, .file-list:empty",
+      ".file-warn",
+      ".file-warn .icon",
+      "/* ---------- Busy spinner (button label stays; spinner is decorative) ---------- */ .spin",
+      "to",
+      ".hero-stage",
+      ".hero-art",
+      ".hero-stage",
+      ".tile:hover",
+      ".type-hint[data-confidence=\"uncertain\"], .type-hint[data-confidence=\"none\"]",
+      ".rec-empty",
+      ".file-card[hidden]"
+    ]
+  },
+  "css/base.css": {
+    "bytes": 1996,
+    "usedPct": 89.5,
+    "unusedRules": [
+      ".skip-link:focus"
+    ]
+  },
+  "css/editor.css": {
+    "bytes": 17542,
+    "usedPct": 86.2,
+    "unusedRules": [
+      ".back-link:hover",
+      ".soon",
+      ".ed-stale .stale-actions",
+      ".thumb-btn:hover",
+      ".rail-add:hover",
+      ".tb-text:hover",
+      ".hl-active",
+      ".ed-section > summary::-webkit-details-marker",
+      ".ed-section:not([open]) > summary .chev",
+      ".ed-link-row:hover .sec-title",
+      ".input[data-state=\"warning\"]",
+      ".msg-warning",
+      ".review[data-level=\"warning\"] .rv-bar",
+      ".review[data-level=\"warning\"] .rv-toggle",
+      ".rv-warning .rv-sev",
+      ".rv-info .rv-sev",
+      ".rv-none"
+    ]
+  },
+  "css/tokens.css": {
+    "bytes": 9014,
+    "usedPct": 60.2,
+    "unusedRules": [
+      "/* ---- Dark: explicit ---- */ :root[data-theme=\"dark\"]",
+      ":root:not([data-theme])"
+    ]
+  },
+  "css/components.css": {
+    "bytes": 4995,
+    "usedPct": 88.3,
+    "unusedRules": [
+      ".chip-warning",
+      ".menu-item:hover",
+      ".toast-error > .icon"
+    ]
+  },
+  "TOTAL": {
+    "bytes": 69325,
+    "usedPct": 81.8
+  }
+}

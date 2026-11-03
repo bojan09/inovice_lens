@@ -6,7 +6,7 @@ import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const PUBLIC = new Set(['index.html', 'css', 'js', 'assets', 'vendor']); // never serve tests/, docs/, node_modules/ or .git/
+const PUBLIC = new Set(['index.html', 'manifest.webmanifest', 'sw.js', 'css', 'js', 'assets', 'vendor']); // never serve tests/, docs/, node_modules/ or .git/
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -14,6 +14,7 @@ const TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.webp': 'image/webp',
@@ -40,6 +41,7 @@ export function createStaticServer() {
       res.writeHead(200, {
         'Content-Type': TYPES[extname(full)] ?? 'application/octet-stream',
         'Cache-Control': 'no-store',
+        ...(full.endsWith(`${sep}sw.js`) ? { 'Service-Worker-Allowed': '/' } : {}),
         'X-Content-Type-Options': 'nosniff',
         'Referrer-Policy': 'no-referrer',
       });

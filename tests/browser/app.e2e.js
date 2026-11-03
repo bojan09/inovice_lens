@@ -23,13 +23,13 @@ const MIME = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', pdf: 'ap
 const FOUR_BUF = ['sample.jpg', 'sample.png', 'sample.webp', 'sample.pdf'].map((name) => ({ name, mimeType: MIME[name.split('.')[1]], buffer: readFixture(name) }));
 
 // ---------------------------------------------------------------- navigation
-test('navigation: 4 views work, aria-current follows, views that are not built yet say Coming in Phase N', async () => {
+test('navigation: 4 views work, aria-current follows, no view is a placeholder any more', async () => {
   const { page, problems, context } = await open();
   const expect = {
     convert: { h1: /Turn documents into editable files/, title: /^Convert/ },
     batch: { h1: /Batch Processing/, title: /^Batch Processing/ },
     projects: { h1: /Saved Projects/, title: /^Saved Projects/ },
-    settings: { h1: /Settings/, title: /^Settings/, soon: 'Coming in Phase 6' },
+    settings: { h1: /Settings/, title: /^Settings/ },
   };
   for (const [id, e] of Object.entries(expect)) {
     await page.click(`.sidebar [data-nav="${id}"]`);
@@ -38,7 +38,7 @@ test('navigation: 4 views work, aria-current follows, views that are not built y
     assert.equal(await page.locator('.view:visible').count(), 1, `exactly one view visible for ${id}`);
     assert.equal(await page.getAttribute(`.sidebar [data-nav="${id}"]`, 'aria-current'), 'page');
     assert.equal(await page.locator('.sidebar [aria-current="page"]').count(), 1);
-    if (e.soon) assert.ok(await page.locator(`#view-${id} .chip`).innerText().then((t) => t === e.soon));
+    assert.doesNotMatch(await page.locator(`#view-${id}`).innerText(), /Coming in Phase|not available yet/i, `${id} is a real screen, not a placeholder`);
   }
   await page.goto(`${app.base}#/does-not-exist`);
   assert.equal(await page.locator('#view-convert').isVisible(), true);

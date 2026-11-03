@@ -8,6 +8,10 @@
   <meta name="description" content="InvoiceLens turns invoices, receipts and documents into editable files. Everything stays on your device.">
   <title>Convert · InvoiceLens</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#f5f9fc" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d151e" media="(prefers-color-scheme: dark)">
   <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
@@ -17,6 +21,7 @@
   <link rel="stylesheet" href="css/editor.css">
   <link rel="stylesheet" href="css/export.css">
   <link rel="stylesheet" href="css/projects.css">
+  <link rel="stylesheet" href="css/settings.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -70,13 +75,14 @@
           </div>
         </div>
       </header>
+      <div class="update-bar" id="update-bar" role="status" hidden><span>A new version of InvoiceLens is ready.</span> <button type="button" class="btn btn-primary btn-sm" id="update-btn">Reload to update</button></div>
 
       <main id="main" class="main" tabindex="-1">
         <!-- ============ Convert ============ -->
         <section class="view" id="view-convert" data-view="convert" aria-labelledby="convert-title">
           <div class="hero">
             <h1 class="hero-title" id="convert-title">Turn documents into <span class="accent">editable files</span></h1>
-            <p class="hero-sub">Upload images or PDFs and let InvoiceLens extract the content automatically.<br>Review, edit and export to PDF, Word, Excel or Google Sheets.</p>
+            <p class="hero-sub">Upload images or PDFs and let InvoiceLens extract the content automatically.<br>Review, edit and export to PDF, Word, Excel or Google Sheets (CSV).</p>
 
             <div class="hero-stage">
               <div class="dropzone" id="dropzone" role="group" aria-label="File drop area">
@@ -101,7 +107,7 @@
                   <path class="doc-arrow" d="M18 168c22 10 62 6 92-26" fill="none"/>
                   <path class="doc-arrow" d="M100 136l14-4-4 14" fill="none"/>
                 </svg>
-                <ul class="format-chips" aria-label="Export formats, available in a later phase">
+                <ul class="format-chips" aria-label="Export formats">
                   <li><span class="ft ft-pdf">PDF</span>PDF</li>
                   <li><span class="ft ft-word">W</span>Word</li>
                   <li><span class="ft ft-excel">X</span>Excel</li>
@@ -149,7 +155,6 @@
             <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg><h2>Multiple Formats</h2><p>PDF, Word, Excel, Sheets</p></li>
             <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lock"/></svg><h2>Keep It Local</h2><p>Works on your device</p></li>
           </ul>
-          <p class="phase-note">Preview build: upload, recognition, editing and export (PDF, Word, Excel, CSV) work today; batch and saved projects come later.</p>
         </section>
 
         <!-- ============ Editor (opened from a file card: #/editor/<id>) ============ -->
@@ -167,14 +172,7 @@
         </section>
 
         <section class="view" id="view-settings" data-view="settings" aria-labelledby="settings-title" hidden>
-          <div class="page-head"><h1 class="page-title" id="settings-title">Settings</h1><p class="page-sub">Customize InvoiceLens to fit your workflow.</p></div>
-          <div class="coming">
-            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-settings"/></svg>
-            <span class="chip chip-info">Coming in Phase 6</span>
-            <h2>Settings are not available yet</h2>
-            <p>Recognition, export defaults and storage options arrive in Phase 6. You can already switch between light, dark and system appearance with the theme button in the top bar.</p>
-            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
-          </div>
+          <div id="settings-root"></div>
         </section>
       </main>
 

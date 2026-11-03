@@ -157,7 +157,7 @@ print(json.dumps({'sheets':wb.sheetnames,'docs':[[c.value for c in r] for r in d
   await page.selectOption('#exp-table', 'items'); await ready();
   ({ p, name } = await dl());
   assert.match(name, /consolidated_items/);
-  assert.match(readFileSync(p, 'utf8'), /^\uFEFFSource file,#,Description,Qty,Unit price,Total\r\n/);
+  assert.match(readFileSync(p, 'utf8'), /^\uFEFFSource file,#,Description,Qty,Unit price,Total,Currency\r\n/);
   // Word cannot be combined: disabled with a reason
   await page.check('#exp-format-docx'); await ready();
   assert.equal(await page.locator('#exp-combine-combined').isDisabled(), true);

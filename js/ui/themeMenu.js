@@ -35,7 +35,7 @@ export function initThemeMenu({ button, menu, buttonIcon, root = document.docume
     pref = next;
     writePref(storage, pref);
     render();
-    close();
+    close(false); // the menu may not be open (the Settings page also sets the theme); never steal focus
   }
 
   button.addEventListener('click', () => (menu.hidden ? open() : close()));
@@ -59,5 +59,5 @@ export function initThemeMenu({ button, menu, buttonIcon, root = document.docume
   mql.addEventListener('change', () => { if (pref === 'system') render(); });
 
   render();
-  return { getPref: () => pref };
+  return { getPref: () => pref, setPref: choose };
 }

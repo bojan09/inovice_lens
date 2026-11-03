@@ -42,6 +42,7 @@ export async function buildXlsx(data, { signal } = {}) {
         typeof r[2] === 'number' ? { value: r[2], type: Number, format: '0.####' } : r[2] === '' ? null : { value: String(r[2]), type: String },
         typeof r[3] === 'number' ? { value: r[3], type: Number, format: moneyFmt } : r[3] === '' ? null : { value: String(r[3]), type: String },
         typeof r[4] === 'number' ? { value: r[4], type: Number, format: moneyFmt } : r[4] === '' ? null : { value: String(r[4]), type: String },
+        r[5] === '' ? null : { value: String(r[5]), type: String },
       ]));
     } else {
       rows = t.rows.map((r, i) => r.map((c) => {

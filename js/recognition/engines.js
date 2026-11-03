@@ -3,9 +3,9 @@ import { createPdfEngine } from './pdfEngine.js';
 import { createOcrEngine } from './ocrEngine.js';
 import { createImageEngine } from './imageEngine.js';
 import { enhanceCanvas, releaseCanvas, computeCoverage } from './canvasOps.js';
-import { recognizeDocument } from './pipeline.js';
+import { recognizeDocument, DEFAULT_RECOGNITION_POLICY } from './pipeline.js';
 
-export function createRealRunner() {
+export function createRealRunner({ getPolicy = () => ({}) } = {}) {
   const ocr = createOcrEngine();
   const engines = {
     pdf: createPdfEngine(),
@@ -23,6 +23,7 @@ export function createRealRunner() {
     engines,
     signal,
     onProgress,
+    policy: { ...DEFAULT_RECOGNITION_POLICY, ...getPolicy() }, // read per file, so a settings change applies to the next file
   });
   return { runner, engines, dispose: () => ocr.dispose() };
 }
