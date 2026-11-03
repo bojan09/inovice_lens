@@ -65,7 +65,7 @@ test('opens from the file card: original rendered, fields extracted from the rea
   assert.deepEqual(rows, [['Product A', '2', '80.00', '160.00'], ['Product B', '1', '85.00', '85.00']]);
   assert.match(await banner(page), /No problems found/);
   assert.equal(await saveText(page), 'No changes yet');
-  assert.equal(await page.locator('.ed-bar .btn-primary').isDisabled(), true, 'Export is visibly NOT functional yet');
+  assert.equal(await page.locator('#ed-export').isDisabled(), false, 'Export is functional from Phase 4 (covered by export.e2e.js)');
   assert.deepEqual(problems, []);
   await context.close();
 });

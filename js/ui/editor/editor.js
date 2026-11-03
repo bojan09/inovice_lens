@@ -17,7 +17,7 @@ import { STATUS } from '../../recognition/states.js';
 const TABS = [['fields', 'Extracted Data'], ['table', 'Table'], ['text', 'Text']];
 const PANES = [['original', 'Original'], ['edit', 'Edit'], ['preview', 'Preview']];
 
-export function createEditor({ root, workspace, session, store, engines, toaster, srLive }) {
+export function createEditor({ root, workspace, session, store, engines, toaster, srLive, onExport = () => {} }) {
   let current = null; // { id, entry, pos }
   let tab = 'fields';
   let pane = 'original';
@@ -90,11 +90,11 @@ export function createEditor({ root, workspace, session, store, engines, toaster
   const saveState = el('p', { class: 'save-state', role: 'status', 'data-state': 'clean' }, el('span', { class: 'save-dot', 'aria-hidden': 'true' }), saveText);
   const undoBtn = el('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Undo', title: 'Undo (Ctrl+Z)', disabled: true }, icon('undo'));
   const redoBtn = el('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Redo', title: 'Redo (Ctrl+Shift+Z)', disabled: true }, icon('redo'));
-  const exportBtn = el('button', { type: 'button', class: 'btn btn-primary', disabled: true, 'aria-describedby': 'ed-export-note' }, 'Export', el('span', { class: 'soon' }, 'Phase 4'));
-  const exportNote = el('span', { class: 'visually-hidden', id: 'ed-export-note' }, 'Export is not available yet. It arrives in Phase 4.');
+  const exportBtn = el('button', { type: 'button', class: 'btn btn-primary', id: 'ed-export' }, icon('download', 'icon-sm'), 'Export');
+  exportBtn.addEventListener('click', () => current?.entry && onExport([current.id], exportBtn));
   const bar = el('div', { class: 'ed-bar' },
     el('a', { class: 'back-link', href: '#/convert' }, icon('arrow-left', 'icon-sm'), 'Back to Workspace'),
-    title, el('span', { class: 'ed-spacer' }), saveState, undoBtn, redoBtn, exportBtn, exportNote);
+    title, el('span', { class: 'ed-spacer' }), saveState, undoBtn, redoBtn, exportBtn);
 
   const staleMsg = el('span', {}, 'This file was recognized again, but you have edits. Your edits belong to the previous recognition.');
   const staleUse = el('button', { type: 'button', class: 'btn btn-secondary btn-sm' }, 'Use new recognition (discards my edits)');

@@ -1,0 +1,48 @@
+/* export.css - the Export sheet (native <dialog>). Tokens only; light and dark follow the theme. */
+.exp {
+  width: min(1000px, 96vw); max-height: 92dvh; padding: 0; border: 1px solid var(--color-border); border-radius: var(--radius-xl);
+  background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-lg); overflow: hidden;
+}
+.exp[open] { display: flex; flex-direction: column; }
+.exp::backdrop { background: var(--color-scrim); }
+.exp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--color-border); }
+.exp-title { font-size: var(--fs-lg); font-weight: var(--fw-semibold); }
+.exp-body { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); flex: 1; min-height: 0; overflow: hidden; }
+.exp-controls { overflow: auto; padding: var(--space-4) var(--space-5); border-right: 1px solid var(--color-border); }
+.exp-preview-col { display: flex; flex-direction: column; min-height: 0; padding: var(--space-4) var(--space-5); background: var(--color-surface-2); }
+.exp-h3 { margin-bottom: var(--space-2); font-size: var(--fs-md); font-weight: var(--fw-semibold); }
+.exp-preview { flex: 1; min-height: 160px; overflow: auto; padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.exp-pv-canvas { width: 100%; height: auto; background: #fff; box-shadow: var(--shadow-sm); }
+.exp-set { margin: 0 0 var(--space-4); padding: 0; border: 0; min-width: 0; }
+.exp-set legend { padding: 0; margin-bottom: var(--space-2); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.opt { display: grid; grid-template-columns: 20px minmax(0, 1fr); column-gap: var(--space-2); align-items: start; padding: var(--space-1) 0; }
+.opt input[type="radio"], .opt input[type="checkbox"] { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--color-accent); }
+.opt label { font-size: var(--fs-md); }
+.opt-help { grid-column: 2; font-size: var(--fs-sm); color: var(--color-text-muted); }
+.opt.is-disabled label { color: var(--color-text-muted); }
+.opt-select { grid-template-columns: minmax(0, 1fr); }
+.opt-select .opt-help { grid-column: 1; }
+.opt-select label { margin-bottom: var(--space-1); font-size: var(--fs-sm); color: var(--color-text-muted); }
+.exp-warn { display: flex; flex-direction: column; gap: 4px; padding: 0 var(--space-5); }
+.exp-warn:empty { display: none; }
+.exp-warn li { display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); background: var(--banner-warning-bg); color: var(--chip-warning-fg); font-size: var(--fs-sm); }
+.exp-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-top: 1px solid var(--color-border); }
+.exp-foot-msg { flex: 1; min-width: 200px; }
+.exp-status { font-size: var(--fs-sm); color: var(--color-text-muted); }
+.exp-error { font-size: var(--fs-sm); color: var(--chip-danger-fg); }
+.exp-error:empty { display: none; }
+.exp-meter { margin-top: var(--space-1); }
+.exp-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pv-sheet { margin-bottom: var(--space-3); }
+@media (max-width: 760px) {
+  .exp { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: 0; border: 0; }
+  .exp-body { grid-template-columns: minmax(0, 1fr); overflow: auto; display: block; }
+  .exp-controls { border-right: 0; overflow: visible; }
+  .exp-preview-col { min-height: 260px; }
+  .exp-head, .exp-foot { padding-inline: var(--space-4); }
+  .exp-controls, .exp-preview-col { padding-inline: var(--space-4); }
+  .opt { padding: var(--space-2) 0; }
+  .opt input[type="radio"], .opt input[type="checkbox"] { width: 22px; height: 22px; }
+  .opt { grid-template-columns: 28px minmax(0, 1fr); }
+  .exp-actions .btn { flex: 1; min-height: var(--control-touch); }
+}

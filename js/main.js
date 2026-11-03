@@ -14,6 +14,7 @@ import { CATEGORY_LABELS } from './recognition/classify.js';
 import { createWorkspace } from './doc/workspace.js';
 import { createEditor } from './ui/editor/editor.js';
 import { parseEditorId } from './router.js';
+import { createExportDialog } from './ui/export/exportDialog.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -57,7 +58,21 @@ session.subscribe((snap) => {
 
 // Editable documents live for the whole page session, so edits survive moving between views.
 const workspace = createWorkspace({ store, session });
-editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive: (m) => { $('sr-live').textContent = m; } });
+const srLive = (m) => { $('sr-live').textContent = m; };
+const exporter = createExportDialog({ workspace, store, session, engines: real.engines, toaster, srLive });
+editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive, onExport: (ids, from) => exporter.open(ids, from) });
+
+// Convert page: Export is available as soon as one file has a result
+const convertBtn = $('convert-btn');
+const syncExportBtn = () => {
+  const n = store.getState().items.filter((i) => ['recognized', 'review'].includes(session.get(i.id)?.status)).length;
+  convertBtn.disabled = n === 0;
+  convertBtn.textContent = n > 1 ? `Export ${n} files…` : 'Export…';
+};
+convertBtn.addEventListener('click', () => exporter.open(null, convertBtn));
+session.subscribe(syncExportBtn);
+store.subscribe(syncExportBtn);
+syncExportBtn();
 if (location.hash.startsWith('#/editor')) editor.open(parseEditorId(location.hash));
 
 const fileList = createFileList({
@@ -108,7 +123,7 @@ window.addEventListener('beforeunload', (e) => {
 });
 
 // Release preview URLs when the page goes away.
-window.addEventListener('pagehide', () => { workspace.dispose(); session.clear(); real.dispose(); store.destroy(); });
+window.addEventListener('pagehide', () => { exporter.close(); workspace.dispose(); session.clear(); real.dispose(); store.destroy(); });
 
 const storageEls = { valueEl: $('storage-value'), meterEl: $('storage-meter'), fillEl: $('storage-fill') };
 updateStorageMeter(storageEls);

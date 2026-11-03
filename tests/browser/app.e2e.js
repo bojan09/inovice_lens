@@ -156,7 +156,7 @@ test('intake: real JPG, PNG, WebP and PDF are accepted, previewed and removable'
 
   // honest state: Convert is disabled and labelled, no success/converted claims
   assert.equal(await page.locator('#convert-btn').isDisabled(), true);
-  assert.match(await page.locator('#convert-btn').innerText(), /Export — coming in Phase 4/i);
+  assert.match(await page.locator('#convert-btn').innerText(), /Export/i);
   assert.doesNotMatch(await page.locator('#files-panel').innerText(), /converted successfully|exported|completed/i);
 
   // remove one

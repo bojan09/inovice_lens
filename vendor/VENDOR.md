@@ -10,11 +10,21 @@ See `docs/dependencies.md` for selection rationale, licences and risks.
 | tesseract.js-core@7.0.0 | `sha512-WnNH518NzmbSq9zgTPeoF8c+xmilS8rFIl1YKbk/ptuuc7p6cLNELNuPAzcmsYw450ca6bLa8j3t0VAtq435Vw==` |
 | @tesseract.js-data/eng@1.0.0 | `sha512-mbTumm6KQPUHyzTPQaF3ObXYnx0SqqfV2nabqFVQBwD6Kl7PhGSLSzOlfFTWy0P3BjghaSKA2W9GB19Jk+ZcTg==` |
 | pdfjs-dist@6.4.299 | `sha512-AVl138zALtfaAPvADulE0PZThbYzCBS79nL4pOSL/6Sm/4AH5A21BD9VHt97OlCuzJuCpmeZtAtkinisF4Vb1g==` |
+| pdf-lib@1.17.1 | `sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==` |
+| docx@9.13.0 | `sha512-MofrvX7rzwCe1xUFXnwneQHzv2p1lIUIDPD01DueOnKGw+TSKxAAcK5Beo69bTyqKUYsX8d49Co03Bcntc60WQ==` |
+| write-excel-file@4.1.1 | `sha512-MUnCnNtQrcZek832ZcU24uU0rSphFmKPD1DvIjXOlygVb93CV7Tme6H3jUTkxsMmjB2W7HIzERzjqTi5kui71A==` |
+| fflate@0.8.3 | `sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==` |
 
-Total: 36 files, 10,066,432 bytes.
+Total: 44 files, 12,039,640 bytes.
 
 | File | Package | Bytes | sha256 |
 |---|---|---|---|
+| docx/index.mjs | docx@9.13.0 | 1283711 | `e6cf7e134562bbf998d28e39a24da119ca33d096d5076ffcfe49304328a3205a` |
+| docx/LICENSE | docx@9.13.0 | 1072 | `b5b2364c0c95a26b2a2399d7e706a61acac680be1d5b180b00592ee85830bffb` |
+| fflate/browser.js | fflate@0.8.3 | 90922 | `b7ca4450b19559a1d50eb381adcee94b82449674be4cd17789d9beba7e6122a1` |
+| fflate/LICENSE | fflate@0.8.3 | 1069 | `0a1df3a083d0c010560aa342e87959c8c1070e6fd54545741f083f22d0c8b551` |
+| pdf-lib/LICENSE.md | pdf-lib@1.17.1 | 1070 | `f2c9fc00fdb66eb99ac156ba52d734af66d8d309f65753ae809ad34ee2883bcb` |
+| pdf-lib/pdf-lib.esm.min.js | pdf-lib@1.17.1 | 523417 | `72c052d97b4d5d9fa6cdbdcb7ad709f03d4ddb1122390cb3afeba4d88651d969` |
 | pdfjs/iccs/CGATS001Compat-v2-micro.icc | pdfjs-dist@6.4.299 | 8464 | `73e1ba37d2bad5bab2a964f40a9eed96209666efc067c3322626214bbef234a0` |
 | pdfjs/iccs/LICENSE | pdfjs-dist@6.4.299 | 6553 | `286e4fd7b447330b2c88e23890e3cd0a9d38cb398d4a59cb247f578ccbda3213` |
 | pdfjs/LICENSE | pdfjs-dist@6.4.299 | 10174 | `0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594` |
@@ -51,3 +61,5 @@ Total: 36 files, 10,066,432 bytes.
 | tesseract/tesseract-core-simd-lstm.wasm.js | tesseract.js-core@7.0.0 | 3899472 | `c58b46a4c796c0b8afccf77591d5b875b6896b45d402bbce8caa6f5362447b38` |
 | tesseract/tesseract.esm.min.js | tesseract.js@7.0.0 | 63220 | `64871d76c75609fd5413b88a8171e2ef40deedd77d5875ba23df104b2d05eb29` |
 | tesseract/worker.min.js | tesseract.js@7.0.0 | 111307 | `576b7df7e3393e137e51849357c9adb53fe7ac1bb69bfa06cf3d61520f182c6d` |
+| write-excel-file/LICENSE | write-excel-file@4.1.1 | 1103 | `8cf9b31947daf7adb4a7a00a037459e58241af050cd0a603bfcf1756e533f75e` |
+| write-excel-file/write-excel-file.min.js | write-excel-file@4.1.1 | 70844 | `d57b59731b19d443f6b7333c5af0aa7250c87146a106f8a746f63429e7694c8e` |

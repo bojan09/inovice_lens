@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/convert.css">
   <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/export.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -130,10 +131,10 @@
                 <button type="button" class="btn btn-secondary" id="add-more" data-browse>Add files</button>
                 <button type="button" class="btn btn-secondary" id="cancel-all" hidden>Cancel all</button>
                 <button type="button" class="btn btn-secondary" id="clear-all">Clear all</button>
-                <button type="button" class="btn btn-primary" id="convert-btn" disabled aria-describedby="convert-note">Export — coming in Phase 4</button>
+                <button type="button" class="btn btn-primary" id="convert-btn" disabled aria-describedby="convert-note">Export…</button>
               </div>
             </div>
-            <p class="notice" id="convert-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-info"/></svg><span>Recognition runs on this device; nothing is uploaded. Open "Review &amp; edit" to correct values; edits are kept only while this tab stays open. Export arrives in Phase 4. Recognition can be wrong, so check important values against the original.</span></p>
+            <p class="notice" id="convert-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-info"/></svg><span>Recognition runs on this device; nothing is uploaded. Open "Review &amp; edit" to correct values; edits are kept only while this tab stays open. Export builds PDF, Word, Excel or CSV files on this device. Recognition can be wrong, so check important values against the original.</span></p>
             <ul class="reject-list" id="reject-list" aria-label="Files that were not accepted"></ul>
             <ul class="file-list" id="file-list" aria-label="Accepted files"></ul>
             <p class="no-match" id="no-match" hidden>No files match your search.</p>
@@ -145,7 +146,7 @@
             <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg><h2>Multiple Formats</h2><p>PDF, Word, Excel, Sheets</p></li>
             <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lock"/></svg><h2>Keep It Local</h2><p>Works on your device</p></li>
           </ul>
-          <p class="phase-note">Preview build: upload, text recognition and editing work today; export is coming in a later phase.</p>
+          <p class="phase-note">Preview build: upload, recognition, editing and export (PDF, Word, Excel, CSV) work today; batch and saved projects come later.</p>
         </section>
 
         <!-- ============ Editor (opened from a file card: #/editor/<id>) ============ -->
@@ -244,6 +245,7 @@
     <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
     <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
     <symbol id="i-text" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></symbol>
   </svg>
 </body>

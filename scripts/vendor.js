@@ -42,6 +42,22 @@ const PACKAGES = [
     ['standard_fonts', 'pdfjs/standard_fonts'],
     ['iccs', 'pdfjs/iccs'],
   ]],
+  ['pdf-lib@1.17.1', 'sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw==', [
+    ['dist/pdf-lib.esm.min.js', 'pdf-lib/pdf-lib.esm.min.js'],
+    ['LICENSE.md', 'pdf-lib/LICENSE.md'],
+  ]],
+  ['docx@9.13.0', 'sha512-MofrvX7rzwCe1xUFXnwneQHzv2p1lIUIDPD01DueOnKGw+TSKxAAcK5Beo69bTyqKUYsX8d49Co03Bcntc60WQ==', [
+    ['dist/index.mjs', 'docx/index.mjs'],
+    ['LICENSE', 'docx/LICENSE'],
+  ]],
+  ['write-excel-file@4.1.1', 'sha512-MUnCnNtQrcZek832ZcU24uU0rSphFmKPD1DvIjXOlygVb93CV7Tme6H3jUTkxsMmjB2W7HIzERzjqTi5kui71A==', [
+    ['bundle/write-excel-file.min.js', 'write-excel-file/write-excel-file.min.js'],
+    ['LICENSE', 'write-excel-file/LICENSE'],
+  ]],
+  ['fflate@0.8.3', 'sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==', [
+    ['esm/browser.js', 'fflate/browser.js'],
+    ['LICENSE', 'fflate/LICENSE'],
+  ]],
 ];
 
 const sha = (buf, algo, enc) => createHash(algo).update(buf).digest(enc);

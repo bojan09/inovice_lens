@@ -322,3 +322,8 @@ Vendored by `scripts/vendor.js` into `vendor/` (see `vendor/VENDOR.md` for per-f
 - CSP that works: `script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' blob: data:` with no console/CSP errors.
 - pdf.js 6.4.299: `getDocument({data, wasmUrl, standardFontDataUrl, iccUrl, enableScripting:false})` works for text extraction and page rendering; module worker from same origin. Password-protected and damaged PDFs raise `PasswordException` / `InvalidPDFException`. pdf.js logs a benign "Indexing all PDF objects" warning when recovering a broken PDF.
 - NOT exercised: JPEG2000/JBIG2 wasm, ICC and standard-font fetching (no fixture needs them), service-worker interception of these fetches (no SW yet).
+
+
+## 8. Phase 4 runtime verification (export libraries)
+
+`node scripts/vendor.js` now also vendors, with the pinned sha512 integrity listed in section 4 and verified before extraction: `pdf-lib@1.17.1` (`pdf-lib/pdf-lib.esm.min.js`, 523,417 B), `docx@9.13.0` (`docx/index.mjs`, 1,283,711 B), `write-excel-file@4.1.1` (`write-excel-file/write-excel-file.min.js`, 70,844 B, UMD classic script exposing `writeXlsxFile`), `fflate@0.8.3` (`fflate/browser.js`, 90,922 B). Total vendor size 12,039,640 B. Licences are copied next to each file. All four load lazily, on first export only; the strict CSP is unchanged. Each was exercised in Node and in Chromium by `tests/unit/export.test.js` and `tests/browser/export.e2e.js`.
