@@ -1,0 +1,56 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "HARDWARE HUB"
+ },
+ "number": null,
+ "issueDate": "2025-09-18",
+ "dueDate": null,
+ "currency": "EUR",
+ "taxRatePercent": "0",
+ "subtotalMinor": 7671,
+ "taxMinor": 0,
+ "totalMinor": 7671,
+ "rows": [
+  {
+   "description": "Apples 1kg",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 185
+  },
+  {
+   "description": "Sandwich",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2383
+  },
+  {
+   "description": "Notebook",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 626
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 607
+  },
+  {
+   "description": "Batteries AA",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2476
+  },
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1394
+  }
+ ],
+ "transcript": "HARDWARE HUB\n5 High Street\nDate: 2025-09-18 18:15\nCashier: 1\nApples 1kg\n\u20ac1.85\nSandwich\n\u20ac23.83\nNotebook\n\u20ac6.26\nBread\n\u20ac6.07\nBatteries AA\n\u20ac24.76\nCoffee\n\u20ac13.94\nSUBTOTAL\n\u20ac76.71\nTAX 0%\n\u20ac0.00\nTOTAL\n\u20ac76.71\nVISA **** 4821\nThank you for shopping"
+}

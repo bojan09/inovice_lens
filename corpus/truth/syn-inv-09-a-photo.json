@@ -1,0 +1,47 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Fernhill Catering Ltd"
+ },
+ "number": "2026/012",
+ "issueDate": "2026-07-03",
+ "dueDate": "2026-08-02",
+ "currency": "EUR",
+ "taxRatePercent": "0",
+ "subtotalMinor": 231413,
+ "taxMinor": 0,
+ "totalMinor": 231413,
+ "rows": [
+  {
+   "description": "USB-C cable 2m",
+   "qty": "10",
+   "unitMinor": 2425,
+   "totalMinor": 24250
+  },
+  {
+   "description": "Desk lamp",
+   "qty": "1",
+   "unitMinor": 203312,
+   "totalMinor": 203312
+  },
+  {
+   "description": "Software licence",
+   "qty": "1.5",
+   "unitMinor": 1481,
+   "totalMinor": 2222
+  },
+  {
+   "description": "Delivery fee",
+   "qty": "0.5",
+   "unitMinor": 3258,
+   "totalMinor": 1629
+  }
+ ],
+ "customer": {
+  "name": "Riverside Bakery"
+ },
+ "transcript": "Fernhill Catering Ltd\n12 Market Street, Springfield\nINVOICE\nInvoice No: 2026/012\nDate: 2026-07-03\nDue Date: 2026-08-02\nBill to:\nRiverside Bakery\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nUSB-C cable 2m\n10\n\u20ac24.25\n\u20ac242.50\nDesk lamp\n1\n\u20ac2,033.12\n\u20ac2,033.12\nSoftware licence\n1.5\n\u20ac14.81\n\u20ac22.22\nDelivery fee\n0.5\n\u20ac32.58\n\u20ac16.29\nSubtotal\n\u20ac2,314.13\nTax (0%)\n\u20ac0.00\nTotal\n\u20ac2,314.13\nThank you for your business."
+}

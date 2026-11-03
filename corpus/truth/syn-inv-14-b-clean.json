@@ -1,0 +1,41 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Quartz Logistics"
+ },
+ "number": "2026/162",
+ "issueDate": "2025-10-10",
+ "dueDate": "2025-10-24",
+ "currency": "EUR",
+ "taxRatePercent": "18",
+ "subtotalMinor": 625363,
+ "taxMinor": 112565,
+ "totalMinor": 737928,
+ "rows": [
+  {
+   "description": "Delivery fee",
+   "qty": "1",
+   "unitMinor": 1443,
+   "totalMinor": 1443
+  },
+  {
+   "description": "Delivery fee",
+   "qty": "1",
+   "unitMinor": 116644,
+   "totalMinor": 116644
+  },
+  {
+   "description": "Toner cartridge",
+   "qty": "3",
+   "unitMinor": 169092,
+   "totalMinor": 507276
+  }
+ ],
+ "customer": {
+  "name": "Greenfield Holdings"
+ },
+ "transcript": "TAX INVOICE\nQuartz Logistics\nUnit 4, Park Road\nInvoice #: 2026/162\nIssued: 2025-10-10\nPayment due: 24/10/2025\nBilled to: Greenfield Holdings\nItem\nQuantity\nPrice\nAmount\nDelivery fee\n1\n\u20ac14.43\n\u20ac14.43\nDelivery fee\n1\n\u20ac1,166.44\n\u20ac1,166.44\nToner cartridge\n3\n\u20ac1,690.92\n\u20ac5,072.76\nSub Total\n\u20ac6,253.63\nVAT (18%)\n\u20ac1,125.65\nAmount Due\n\u20ac7,379.28\nThank you for your business."
+}

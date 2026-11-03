@@ -1,0 +1,35 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Kestrel Office Goods"
+ },
+ "number": "A389-23",
+ "issueDate": "2026-08-05",
+ "dueDate": "2026-09-04",
+ "currency": null,
+ "taxRatePercent": "18",
+ "subtotalMinor": 111327,
+ "taxMinor": 20039,
+ "totalMinor": 131366,
+ "rows": [
+  {
+   "description": "Delivery fee",
+   "qty": "10",
+   "unitMinor": 8417,
+   "totalMinor": 84170
+  },
+  {
+   "description": "Printer paper A4",
+   "qty": "0.5",
+   "unitMinor": 54313,
+   "totalMinor": 27157
+  }
+ ],
+ "customer": {
+  "name": "Summit Dental Clinic"
+ },
+ "transcript": "Kestrel Office Goods\n12 Market Street, Springfield\nINVOICE\nInvoice No: A389-23\nDate: 05 Aug 2026\nDue Date: 04 Sep 2026\nBill to:\nSummit Dental Clinic\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nDelivery fee\n10\n84.17\n841.70\nPrinter paper A4\n0.5\n543.13\n271.57\nSubtotal\n1,113.27\nTax (18%)\n200.39\nTotal\n1,313.66\nThank you for your business."
+}

@@ -1,0 +1,44 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "FRESH BITE CAFE"
+ },
+ "number": null,
+ "issueDate": "2026-07-01",
+ "dueDate": null,
+ "currency": "USD",
+ "taxRatePercent": "10",
+ "subtotalMinor": 6872,
+ "taxMinor": 687,
+ "totalMinor": 7559,
+ "rows": [
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2168
+  },
+  {
+   "description": "Sandwich",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2203
+  },
+  {
+   "description": "Apples 1kg",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1699
+  },
+  {
+   "description": "Notebook",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 802
+  }
+ ],
+ "transcript": "FRESH BITE CAFE\n5 High Street\nDate: 2026-07-01 09:35\nCashier: 7\nCoffee\n$21.68\nSandwich\n$22.03\nApples 1kg\n$16.99\nNotebook\n$8.02\nSUBTOTAL\n$68.72\nTAX 10%\n$6.87\nTOTAL\n$75.59\nVISA **** 4821\nThank you for shopping"
+}

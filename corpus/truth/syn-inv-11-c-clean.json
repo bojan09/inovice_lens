@@ -1,0 +1,41 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Fernhill Catering Ltd"
+ },
+ "number": "2026/035",
+ "issueDate": "2026-08-09",
+ "dueDate": null,
+ "currency": "GBP",
+ "taxRatePercent": "20",
+ "subtotalMinor": 2562174,
+ "taxMinor": 512435,
+ "totalMinor": 3074609,
+ "rows": [
+  {
+   "description": "Website hosting",
+   "qty": "1",
+   "unitMinor": 170760,
+   "totalMinor": 170760
+  },
+  {
+   "description": "Monitor stand",
+   "qty": "10",
+   "unitMinor": 227968,
+   "totalMinor": 2279680
+  },
+  {
+   "description": "Printer paper A4",
+   "qty": "2",
+   "unitMinor": 55867,
+   "totalMinor": 111734
+  }
+ ],
+ "customer": {
+  "name": "Summit Dental Clinic"
+ },
+ "transcript": "Fernhill Catering Ltd\nInvoice\nInvoice Number: 2026/035\nDate of issue: 09 Aug 2026\nCustomer: Summit Dental Clinic\nDescription\nQty\nUnit price\nTotal\nWebsite hosting\n1\n\u00a31,707.60\n\u00a31,707.60\nMonitor stand\n10\n\u00a32,279.68\n\u00a322,796.80\nPrinter paper A4\n2\n\u00a3558.67\n\u00a31,117.34\nSubtotal\n\u00a325,621.74\nTax 20%\n\u00a35,124.35\nTotal due\n\u00a330,746.09\nThank you for your business."
+}

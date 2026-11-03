@@ -1,0 +1,53 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Maple Street Print Shop"
+ },
+ "number": "2026/174",
+ "issueDate": "2026-12-06",
+ "dueDate": "2027-01-05",
+ "currency": null,
+ "taxRatePercent": "18",
+ "subtotalMinor": 558198,
+ "taxMinor": 100476,
+ "totalMinor": 658674,
+ "rows": [
+  {
+   "description": "Monitor stand",
+   "qty": "1",
+   "unitMinor": 9364,
+   "totalMinor": 9364
+  },
+  {
+   "description": "Wireless mouse",
+   "qty": "1",
+   "unitMinor": 117250,
+   "totalMinor": 117250
+  },
+  {
+   "description": "Monitor stand",
+   "qty": "5",
+   "unitMinor": 8900,
+   "totalMinor": 44500
+  },
+  {
+   "description": "Cleaning service",
+   "qty": "1.5",
+   "unitMinor": 966,
+   "totalMinor": 1449
+  },
+  {
+   "description": "Maintenance visit",
+   "qty": "3",
+   "unitMinor": 128545,
+   "totalMinor": 385635
+  }
+ ],
+ "customer": {
+  "name": "Delta Media Group"
+ },
+ "transcript": "Maple Street Print Shop\nINVOICE\nNo. 2026/174\nDate: 2026-12-06\nDue Date: 2027-01-05\nBill to:\nDelta Media Group\nDescription\nQty\nUnit Price\nTotal\nMonitor stand\n1\n93.64\n93.64\nWireless mouse\n1\n1,172.50\n1,172.50\nMonitor stand\n5\n89.00\n445.00\nCleaning service\n1.5\n9.66\n14.49\nMaintenance visit\n3\n1,285.45\n3,856.35\nSubtotal\n5,581.98\nTax (18%)\n1,004.76\nTotal\n6,586.74\nThank you for your business."
+}

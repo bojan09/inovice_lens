@@ -1,0 +1,56 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "FRESH BITE CAFE"
+ },
+ "number": null,
+ "issueDate": "2025-01-23",
+ "dueDate": null,
+ "currency": "EUR",
+ "taxRatePercent": "8",
+ "subtotalMinor": 8283,
+ "taxMinor": 663,
+ "totalMinor": 8946,
+ "rows": [
+  {
+   "description": "Milk 1L",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 898
+  },
+  {
+   "description": "Notebook",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2110
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2014
+  },
+  {
+   "description": "Soap",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1170
+  },
+  {
+   "description": "Tape roll",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 673
+  },
+  {
+   "description": "Orange juice",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1418
+  }
+ ],
+ "transcript": "FRESH BITE CAFE\n5 High Street\nDate: 2025-01-23 12:52\nCashier: 9\nMilk 1L\n\u20ac8.98\nNotebook\n\u20ac21.10\nBread\n\u20ac20.14\nSoap\n\u20ac11.70\nTape roll\n\u20ac6.73\nOrange juice\n\u20ac14.18\nSUBTOTAL\n\u20ac82.83\nTAX 8%\n\u20ac6.63\nTOTAL\n\u20ac89.46\nVISA **** 4821\nThank you for shopping"
+}

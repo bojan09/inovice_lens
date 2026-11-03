@@ -1,0 +1,47 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "#18158",
+ "issueDate": "2026-09-26",
+ "dueDate": "2026-10-10",
+ "currency": "EUR",
+ "taxRatePercent": "0",
+ "subtotalMinor": 692737,
+ "taxMinor": 0,
+ "totalMinor": 692737,
+ "rows": [
+  {
+   "description": "Consulting (hours)",
+   "qty": "1",
+   "unitMinor": 14271,
+   "totalMinor": 14271
+  },
+  {
+   "description": "Wireless mouse",
+   "qty": "5",
+   "unitMinor": 8377,
+   "totalMinor": 41885
+  },
+  {
+   "description": "Website hosting",
+   "qty": "0.5",
+   "unitMinor": 3651,
+   "totalMinor": 1826
+  },
+  {
+   "description": "Maintenance visit",
+   "qty": "3",
+   "unitMinor": 211585,
+   "totalMinor": 634755
+  }
+ ],
+ "customer": {
+  "name": "Delta Media Group"
+ },
+ "transcript": "TAX INVOICE\nLinden & Pike Studio\nUnit 4, Park Road\nInvoice #: #18158\nIssued: 26/09/2026\nPayment due: 2026-10-10\nBilled to: Delta Media Group\nItem\nQuantity\nPrice\nAmount\nConsulting (hours)\n1\n\u20ac142.71\n\u20ac142.71\nWireless mouse\n5\n\u20ac83.77\n\u20ac418.85\nWebsite hosting\n0.5\n\u20ac36.51\n\u20ac18.26\nMaintenance visit\n3\n\u20ac2115.85\n\u20ac6347.55\nSub Total\n\u20ac6927.37\nVAT (0%)\n\u20ac0.00\nAmount Due\n\u20ac6927.37\nThank you for your business."
+}

@@ -15,7 +15,7 @@ import { findDate } from './dates.js';
 import { emptyField, makeField, ROW_COLUMNS } from './model.js';
 
 const TITLE_WORDS = /^(?:tax\s+)?(?:invoice|receipt|bill|credit\s+note|statement|quotation|quote|proforma(?:\s+invoice)?)\s*$/i;
-const NUMBER_LABELS = /\b(?:invoice|inv|receipt|bill|order|document|doc|ref(?:erence)?)\s*(?:no\.?|number|num\.?|nr\.?|#)\s*[:#.\-]?\s*|\b(?:invoice|receipt)\s*#\s*/gi;
+const NUMBER_LABELS = /\b(?:invoice|inv|receipt|bill|order|document|doc|ref(?:erence)?)\s*(?:no\.?|number|num\.?|nr\.?|#)\s*[:#.\-]?\s*|\b(?:invoice|receipt)\s*#\s*|(?<![\w.])no\.\s+(?=[A-Za-z0-9#])/gi;
 const ISSUE_LABEL = /\b(?:invoice\s*date|date\s*of\s*issue|issue\s*date|issued(?:\s*on)?|receipt\s*date|(?<!due\s)(?<!payment\s)(?<!due\s*)date)\b\s*[:.\-]?\s*/gi;
 const DUE_LABEL = /\b(?:due\s*date|payment\s*due(?:\s*date)?|due\s*on|pay\s*by)\b\s*[:.\-]?\s*/gi;
 const SUBTOTAL_LABEL = /\bsub\s*-?\s*total\b/i;
@@ -27,7 +27,7 @@ const RECEIPT_SKIP = /\b(?:total|sub\s*-?\s*total|tax|vat|gst|change|cash|card|v
 // One amount as printed: optional sign/parenthesis, optional currency code/symbol, digits with grouping.
 const AMOUNT_RE = /[-(]?\s*(?:[A-Z]{3}\s*)?[$€£¥]?\s*\d{1,3}(?:[  ' ]\d{3})+(?:[.,]\d+)?\)?(?:\s*[A-Z]{3}\b)?|[-(]?\s*(?:[A-Z]{3}\s*)?[$€£¥]?\s*\d[\d.,]*\)?(?:\s*[A-Z]{3}\b)?/;
 const AMOUNT_ANCHORED = new RegExp(`^[\\s:.\\-]*(${AMOUNT_RE.source})`);
-const AMOUNT_TOKEN = /^[-(]?(?:[A-Z]{3})?[$€£¥]?\d[\d.,]*\)?(?:[A-Z]{3})?$/;
+const AMOUNT_TOKEN = /^[-(]?(?:[A-Z]{3}\s?)?[$€£¥]?\d[\d.,]*\)?(?:\s?[A-Z]{3})?$/;
 const PLAIN_QTY = /^\d+(?:[.,]\d+)?$/;
 const PERCENT = /\(?\s*(\d+(?:[.,]\d+)?)\s*%\s*\)?/;
 
@@ -77,7 +77,7 @@ function dateField(pages, labelRe) {
 
 function numberField(pages) {
   const hit = labelled(pages, NUMBER_LABELS, (line, at, page) => {
-    const m = /^([A-Za-z0-9][A-Za-z0-9\-_/.]*)/.exec(line.text.slice(at));
+    const m = /^(#?[A-Za-z0-9][A-Za-z0-9\-_/.]*)/.exec(line.text.slice(at));
     if (!m) return null;
     const value = m[1].replace(/[.,;:]+$/, '');
     if (!/\d/.test(value)) return null; // "Invoice No: Date" is a label, not a number
@@ -161,11 +161,22 @@ function currencyField(allText) {
 
 // ----------------------------------------------------------------------------- rows
 function tokensOf(line, from) {
-  const out = [];
+  const raw = [];
   const re = /\S+/g;
   re.lastIndex = from;
   let m;
-  while ((m = re.exec(line.text))) out.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+  while ((m = re.exec(line.text))) raw.push({ text: m[0], start: m.index, end: m.index + m[0].length });
+  // "134.80 USD" and "USD 134.80" are ONE amount: join a bare currency code to its neighbouring number
+  const out = [];
+  for (let i = 0; i < raw.length; i += 1) {
+    const t = raw[i];
+    const nxt = raw[i + 1];
+    if (/^[A-Z]{3}$/.test(t.text) && nxt && /^[-(]?[$€£¥]?\d[\d.,]*\)?$/.test(nxt.text)) {
+      out.push({ text: `${t.text} ${nxt.text}`, start: t.start, end: nxt.end, joined: true }); i += 1;
+    } else if (/^[-(]?[$€£¥]?\d[\d.,]*[.,]\d{1,3}\)?$/.test(t.text) && nxt && /^[A-Z]{3}$/.test(nxt.text) && !(raw[i + 2] && /^\d/.test(raw[i + 2].text) && !(raw[i + 3] && /^[A-Z]{3}$/.test(raw[i + 3].text)))) {
+      out.push({ text: `${t.text} ${nxt.text}`, start: t.start, end: nxt.end, joined: true }); i += 1;
+    } else out.push(t);
+  }
   return out;
 }
 

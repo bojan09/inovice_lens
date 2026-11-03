@@ -1,0 +1,35 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "INV-2026-0857",
+ "issueDate": "2026-04-08",
+ "dueDate": "2026-05-08",
+ "currency": "EUR",
+ "taxRatePercent": "7.5",
+ "subtotalMinor": 115474,
+ "taxMinor": 8661,
+ "totalMinor": 124135,
+ "rows": [
+  {
+   "description": "Cleaning service",
+   "qty": "2",
+   "unitMinor": 56683,
+   "totalMinor": 113366
+  },
+  {
+   "description": "Software licence",
+   "qty": "1",
+   "unitMinor": 2108,
+   "totalMinor": 2108
+  }
+ ],
+ "customer": {
+  "name": "Riverside Bakery"
+ },
+ "transcript": "Linden & Pike Studio\nINVOICE\nNo. INV-2026-0857\nDate: Apr 8, 2026\nDue Date: May 8, 2026\nBill to:\nRiverside Bakery\nDescription\nQty\nUnit Price\nTotal\nCleaning service\n2\n566.83 EUR\n1133.66 EUR\nSoftware licence\n1\n21.08 EUR\n21.08 EUR\nSubtotal\n1154.74 EUR\nTax (7.5%)\n86.61 EUR\nTotal\n1241.35 EUR\nThank you for your business."
+}

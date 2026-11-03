@@ -12,6 +12,25 @@ const median = (arr) => {
   return s.length ? s[Math.floor(s.length / 2)] : 0;
 };
 
+/** Median dy/dx between horizontally neighbouring words of one line; 0 when the page looks level or there is too little evidence. */
+export function estimateSlope(items, medH) {
+  const xs = [...items].sort((a, b) => a.x - b.x);
+  const samples = [];
+  for (let i = 0; i < xs.length; i += 1) {
+    const a = xs[i];
+    const ax = a.x + (a.w || 0) / 2;
+    for (let j = i + 1; j < xs.length && xs[j].x - a.x < 8 * medH + (a.w || 0); j += 1) {
+      const b = xs[j];
+      const dx = b.x + (b.w || 0) / 2 - ax;
+      const dy = b.y + b.h / 2 - (a.y + a.h / 2);
+      if (dx > 1.5 * medH && dx < 8 * medH && Math.abs(dy) < 0.8 * medH) samples.push(dy / dx);
+    }
+  }
+  if (samples.length < 12) return 0;
+  const m = median(samples);
+  return Math.abs(m) < 0.004 || Math.abs(m) > 0.1 ? 0 : m; // under ~0.25 degrees: ignore; over ~6: not a tilt we trust
+}
+
 /**
  * Group items into reading-order lines, keeping WHERE each piece of line text came from.
  * Pure: never mutates the items. Each line is
@@ -27,15 +46,20 @@ export function itemsToLineObjects(items) {
   });
   if (!usable.length) return [];
   const medH = median(usable.map((u) => u.it.h).filter((h) => h > 0)) || 10;
-  const sorted = [...usable].sort((a, b) => (a.it.y + a.it.h / 2) - (b.it.y + b.it.h / 2) || a.it.x - b.it.x);
+  // A photographed page is rarely level: over a full page width a 1.5 degree tilt moves a baseline by
+  // more than a text height, which would split one printed line into several. Estimate the tilt from
+  // neighbouring words and measure heights along the tilted baseline. Raw coordinates are not touched.
+  const slope = estimateSlope(usable.map((u) => u.it), medH);
+  const cyOf = (it) => it.y + it.h / 2 - slope * (it.x + (it.w || 0) / 2);
+  const sorted = [...usable].sort((a, b) => cyOf(a.it) - cyOf(b.it) || a.it.x - b.it.x);
 
   const rows = [];
   for (const u of sorted) {
-    const cy = u.it.y + u.it.h / 2;
+    const cy = cyOf(u.it);
     const row = rows[rows.length - 1];
     if (row && Math.abs(cy - row.cy) <= 0.5 * Math.max(medH, u.it.h || 0)) {
       row.items.push(u);
-      row.cy = row.items.reduce((s, i) => s + i.it.y + i.it.h / 2, 0) / row.items.length;
+      row.cy = row.items.reduce((s, i) => s + cyOf(i.it), 0) / row.items.length;
     } else {
       rows.push({ cy, items: [u] });
     }

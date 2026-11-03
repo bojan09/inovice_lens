@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Northwind Traders"
+ },
+ "number": "2025/102",
+ "issueDate": "2025-03-07",
+ "dueDate": "2025-04-06",
+ "currency": null,
+ "taxRatePercent": "10",
+ "subtotalMinor": 2806,
+ "taxMinor": 281,
+ "totalMinor": 3087,
+ "rows": [
+  {
+   "description": "USB-C cable 2m",
+   "qty": "1",
+   "unitMinor": 2806,
+   "totalMinor": 2806
+  }
+ ],
+ "customer": {
+  "name": "Harbor View Hotel"
+ },
+ "transcript": "Northwind Traders\nINVOICE\nNo. 2025/102\nDate: 2025-03-07\nDue Date: 2025-04-06\nBill to:\nHarbor View Hotel\nDescription\nQty\nUnit Price\nTotal\nUSB-C cable 2m\n1\n28.06\n28.06\nSubtotal\n28.06\nTax (10%)\n2.81\nTotal\n30.87\nThank you for your business."
+}

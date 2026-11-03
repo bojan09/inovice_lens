@@ -1,0 +1,53 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "INV-2026-0978",
+ "issueDate": "2026-03-09",
+ "dueDate": "2026-04-08",
+ "currency": "USD",
+ "taxRatePercent": "7.5",
+ "subtotalMinor": 216362,
+ "taxMinor": 16227,
+ "totalMinor": 232589,
+ "rows": [
+  {
+   "description": "Printer paper A4",
+   "qty": "10",
+   "unitMinor": 1348,
+   "totalMinor": 13480
+  },
+  {
+   "description": "Delivery fee",
+   "qty": "1.5",
+   "unitMinor": 7426,
+   "totalMinor": 11139
+  },
+  {
+   "description": "Maintenance visit",
+   "qty": "1",
+   "unitMinor": 101362,
+   "totalMinor": 101362
+  },
+  {
+   "description": "Software licence",
+   "qty": "1.5",
+   "unitMinor": 3147,
+   "totalMinor": 4721
+  },
+  {
+   "description": "Software licence",
+   "qty": "10",
+   "unitMinor": 8566,
+   "totalMinor": 85660
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "Linden & Pike Studio\nInvoice\nInvoice Number: INV-2026-0978\nDate of issue: 09 Mar 2026\nDue on: 08 Apr 2026\nCustomer: Pinecrest Academy\nDescription\nQty\nUnit price\nTotal\nPrinter paper A4\n10\n13.48 USD\n134.80 USD\nDelivery fee\n1.5\n74.26 USD\n111.39 USD\nMaintenance visit\n1\n1,013.62 USD\n1,013.62 USD\nSoftware licence\n1.5\n31.47 USD\n47.21 USD\nSoftware licence\n10\n85.66 USD\n856.60 USD\nSubtotal\n2,163.62 USD\nTax 7.5%\n162.27 USD\nTotal due\n2,325.89 USD\nThank you for your business."
+}

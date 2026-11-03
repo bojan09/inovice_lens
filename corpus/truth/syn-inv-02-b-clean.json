@@ -1,0 +1,47 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "INV-2026-0751",
+ "issueDate": "2026-01-21",
+ "dueDate": "2026-02-20",
+ "currency": "EUR",
+ "taxRatePercent": "18",
+ "subtotalMinor": 395324,
+ "taxMinor": 71158,
+ "totalMinor": 466482,
+ "rows": [
+  {
+   "description": "Office chair",
+   "qty": "3",
+   "unitMinor": 114385,
+   "totalMinor": 343155
+  },
+  {
+   "description": "Desk lamp",
+   "qty": "1",
+   "unitMinor": 8095,
+   "totalMinor": 8095
+  },
+  {
+   "description": "Monitor stand",
+   "qty": "5",
+   "unitMinor": 4448,
+   "totalMinor": 22240
+  },
+  {
+   "description": "Toner cartridge",
+   "qty": "3",
+   "unitMinor": 7278,
+   "totalMinor": 21834
+  }
+ ],
+ "customer": {
+  "name": "Harbor View Hotel"
+ },
+ "transcript": "TAX INVOICE\nLinden & Pike Studio\nUnit 4, Park Road\nInvoice #: INV-2026-0751\nIssued: 21 Jan 2026\nPayment due: 20 Feb 2026\nBilled to: Harbor View Hotel\nItem\nQuantity\nPrice\nAmount\nOffice chair\n3\n\u20ac1143.85\n\u20ac3431.55\nDesk lamp\n1\n\u20ac80.95\n\u20ac80.95\nMonitor stand\n5\n\u20ac44.48\n\u20ac222.40\nToner cartridge\n3\n\u20ac72.78\n\u20ac218.34\nSub Total\n\u20ac3953.24\nVAT (18%)\n\u20ac711.58\nAmount Due\n\u20ac4664.82\nThank you for your business."
+}

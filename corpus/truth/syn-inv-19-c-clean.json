@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Kestrel Office Goods"
+ },
+ "number": "INV-2026-0574",
+ "issueDate": "2026-01-25",
+ "dueDate": "2026-02-08",
+ "currency": "EUR",
+ "taxRatePercent": "5",
+ "subtotalMinor": 448036,
+ "taxMinor": 22402,
+ "totalMinor": 470438,
+ "rows": [
+  {
+   "description": "Training session",
+   "qty": "4",
+   "unitMinor": 112009,
+   "totalMinor": 448036
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "Kestrel Office Goods\nInvoice\nInvoice Number: INV-2026-0574\nDate of issue: Jan 25, 2026\nDue on: Feb 8, 2026\nCustomer: Pinecrest Academy\nDescription\nQty\nUnit price\nTotal\nTraining session\n4\n1120.09 EUR\n4480.36 EUR\nSubtotal\n4480.36 EUR\nTax 5%\n224.02 EUR\nTotal due\n4704.38 EUR\nThank you for your business."
+}

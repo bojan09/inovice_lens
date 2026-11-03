@@ -1,0 +1,44 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "CORNER MARKET"
+ },
+ "number": null,
+ "issueDate": "2025-10-13",
+ "dueDate": null,
+ "currency": "USD",
+ "taxRatePercent": "0",
+ "subtotalMinor": 4092,
+ "taxMinor": 0,
+ "totalMinor": 4092,
+ "rows": [
+  {
+   "description": "Soap",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 643
+  },
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 592
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1596
+  },
+  {
+   "description": "Milk 1L",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1261
+  }
+ ],
+ "transcript": "CORNER MARKET\n5 High Street\nDate: 13/10/2025 20:13\nCashier: 1\nSoap\n$6.43\nCoffee\n$5.92\nBread\n$15.96\nMilk 1L\n$12.61\nSUBTOTAL\n$40.92\nTAX 0%\n$0.00\nTOTAL\n$40.92\nVISA **** 4821\nThank you for shopping"
+}

@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Blue Harbor Supplies"
+ },
+ "number": "2025/095",
+ "issueDate": "2025-11-11",
+ "dueDate": "2025-12-11",
+ "currency": "EUR",
+ "taxRatePercent": "18",
+ "subtotalMinor": 14706,
+ "taxMinor": 2647,
+ "totalMinor": 17353,
+ "rows": [
+  {
+   "description": "Website hosting",
+   "qty": "3",
+   "unitMinor": 4902,
+   "totalMinor": 14706
+  }
+ ],
+ "customer": {
+  "name": "Atlas Engineering Ltd"
+ },
+ "transcript": "Blue Harbor Supplies\nInvoice\nInvoice Number: 2025/095\nDate of issue: Nov 11, 2025\nDue on: Dec 11, 2025\nCustomer: Atlas Engineering Ltd\nDescription\nQty\nUnit price\nTotal\nWebsite hosting\n3\n49.02 EUR\n147.06 EUR\nSubtotal\n147.06 EUR\nTax 18%\n26.47 EUR\nTotal due\n173.53 EUR\nThank you for your business."
+}

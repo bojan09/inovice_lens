@@ -1,0 +1,41 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Northwind Traders"
+ },
+ "number": "#62553",
+ "issueDate": "2025-05-12",
+ "dueDate": "2025-06-11",
+ "currency": "EUR",
+ "taxRatePercent": "18",
+ "subtotalMinor": 2415431,
+ "taxMinor": 434778,
+ "totalMinor": 2850209,
+ "rows": [
+  {
+   "description": "Cleaning service",
+   "qty": "1",
+   "unitMinor": 9703,
+   "totalMinor": 9703
+  },
+  {
+   "description": "Website hosting",
+   "qty": "4",
+   "unitMinor": 6702,
+   "totalMinor": 26808
+  },
+  {
+   "description": "Desk lamp",
+   "qty": "10",
+   "unitMinor": 237892,
+   "totalMinor": 2378920
+  }
+ ],
+ "customer": {
+  "name": "Summit Dental Clinic"
+ },
+ "transcript": "Northwind Traders\nInvoice\nInvoice Number: #62553\nDate of issue: 2025-05-12\nDue on: 2025-06-11\nCustomer: Summit Dental Clinic\nDescription\nQty\nUnit price\nTotal\nCleaning service\n1\n97.03 EUR\n97.03 EUR\nWebsite hosting\n4\n67.02 EUR\n268.08 EUR\nDesk lamp\n10\n2,378.92 EUR\n23,789.20 EUR\nSubtotal\n24,154.31 EUR\nTax 18%\n4,347.78 EUR\nTotal due\n28,502.09 EUR\nThank you for your business."
+}

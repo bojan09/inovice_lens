@@ -1,0 +1,47 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "INV-2026-0229",
+ "issueDate": "2026-06-12",
+ "dueDate": "2026-06-26",
+ "currency": "EUR",
+ "taxRatePercent": "20",
+ "subtotalMinor": 620260,
+ "taxMinor": 124052,
+ "totalMinor": 744312,
+ "rows": [
+  {
+   "description": "Website hosting",
+   "qty": "2",
+   "unitMinor": 205469,
+   "totalMinor": 410938
+  },
+  {
+   "description": "Printer paper A4",
+   "qty": "1",
+   "unitMinor": 176808,
+   "totalMinor": 176808
+  },
+  {
+   "description": "Monitor stand",
+   "qty": "3",
+   "unitMinor": 6868,
+   "totalMinor": 20604
+  },
+  {
+   "description": "Monitor stand",
+   "qty": "5",
+   "unitMinor": 2382,
+   "totalMinor": 11910
+  }
+ ],
+ "customer": {
+  "name": "Greenfield Holdings"
+ },
+ "transcript": "Linden & Pike Studio\n12 Market Street, Springfield\nINVOICE\nInvoice No: INV-2026-0229\nDate: Jun 12, 2026\nDue Date: Jun 26, 2026\nBill to:\nGreenfield Holdings\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nWebsite hosting\n2\n\u20ac2054.69\n\u20ac4109.38\nPrinter paper A4\n1\n\u20ac1768.08\n\u20ac1768.08\nMonitor stand\n3\n\u20ac68.68\n\u20ac206.04\nMonitor stand\n5\n\u20ac23.82\n\u20ac119.10\nSubtotal\n\u20ac6202.60\nTax (20%)\n\u20ac1240.52\nTotal\n\u20ac7443.12\nThank you for your business."
+}

@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Fernhill Catering Ltd"
+ },
+ "number": "2025/071",
+ "issueDate": "2026-12-25",
+ "dueDate": "2027-01-08",
+ "currency": null,
+ "taxRatePercent": "10",
+ "subtotalMinor": 43465,
+ "taxMinor": 4347,
+ "totalMinor": 47812,
+ "rows": [
+  {
+   "description": "Office chair",
+   "qty": "5",
+   "unitMinor": 8693,
+   "totalMinor": 43465
+  }
+ ],
+ "customer": {
+  "name": "Riverside Bakery"
+ },
+ "transcript": "Fernhill Catering Ltd\nINVOICE\nNo. 2025/071\nDate: 25 Dec 2026\nDue Date: 08 Jan 2027\nBill to:\nRiverside Bakery\nDescription\nQty\nUnit Price\nTotal\nOffice chair\n5\n86.93\n434.65\nSubtotal\n434.65\nTax (10%)\n43.47\nTotal\n478.12\nThank you for your business."
+}

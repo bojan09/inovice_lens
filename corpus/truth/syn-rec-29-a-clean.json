@@ -1,0 +1,56 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "FRESH BITE CAFE"
+ },
+ "number": null,
+ "issueDate": "2025-08-24",
+ "dueDate": null,
+ "currency": null,
+ "taxRatePercent": "10",
+ "subtotalMinor": 5098,
+ "taxMinor": 510,
+ "totalMinor": 5608,
+ "rows": [
+  {
+   "description": "Milk 1L",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 208
+  },
+  {
+   "description": "Tape roll",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 318
+  },
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1730
+  },
+  {
+   "description": "Apples 1kg",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 441
+  },
+  {
+   "description": "Batteries AA",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 571
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1830
+  }
+ ],
+ "transcript": "FRESH BITE CAFE\n5 High Street\nDate: 24/08/2025 18:39\nCashier: 6\nMilk 1L\n2.08\nTape roll\n3.18\nCoffee\n17.30\nApples 1kg\n4.41\nBatteries AA\n5.71\nBread\n18.30\nSUBTOTAL\n50.98\nTAX 10%\n5.10\nTOTAL\n56.08\nVISA **** 4821\nThank you for shopping"
+}

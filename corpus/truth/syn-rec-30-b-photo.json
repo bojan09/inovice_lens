@@ -1,0 +1,38 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "CITY PHARMACY"
+ },
+ "number": null,
+ "issueDate": "2025-09-24",
+ "dueDate": null,
+ "currency": "EUR",
+ "taxRatePercent": "10",
+ "subtotalMinor": 3439,
+ "taxMinor": 344,
+ "totalMinor": 3783,
+ "rows": [
+  {
+   "description": "Milk 1L",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 775
+  },
+  {
+   "description": "Sandwich",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1264
+  },
+  {
+   "description": "Notebook",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1400
+  }
+ ],
+ "transcript": "CITY PHARMACY\n5 High Street\nDate: 24/09/2025 11:18\nCashier: 6\nMilk 1L\n\u20ac7.75\nSandwich\n\u20ac12.64\nNotebook\n\u20ac14.00\nSUBTOTAL\n\u20ac34.39\nTAX 10%\n\u20ac3.44\nTOTAL\n\u20ac37.83\nVISA **** 4821\nThank you for shopping"
+}

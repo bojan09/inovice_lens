@@ -1,0 +1,47 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Linden & Pike Studio"
+ },
+ "number": "INV-2026-0348",
+ "issueDate": "2025-12-20",
+ "dueDate": "2026-01-19",
+ "currency": "EUR",
+ "taxRatePercent": "5",
+ "subtotalMinor": 38419,
+ "taxMinor": 1921,
+ "totalMinor": 40340,
+ "rows": [
+  {
+   "description": "Training session",
+   "qty": "4",
+   "unitMinor": 3220,
+   "totalMinor": 12880
+  },
+  {
+   "description": "Printer paper A4",
+   "qty": "4",
+   "unitMinor": 1869,
+   "totalMinor": 7476
+  },
+  {
+   "description": "Office chair",
+   "qty": "1",
+   "unitMinor": 8751,
+   "totalMinor": 8751
+  },
+  {
+   "description": "Maintenance visit",
+   "qty": "1",
+   "unitMinor": 9312,
+   "totalMinor": 9312
+  }
+ ],
+ "customer": {
+  "name": "Summit Dental Clinic"
+ },
+ "transcript": "Linden & Pike Studio\nINVOICE\nNo. INV-2026-0348\nDate: Dec 20, 2025\nDue Date: Jan 19, 2026\nBill to:\nSummit Dental Clinic\nDescription\nQty\nUnit Price\nTotal\nTraining session\n4\n\u20ac32.20\n\u20ac128.80\nPrinter paper A4\n4\n\u20ac18.69\n\u20ac74.76\nOffice chair\n1\n\u20ac87.51\n\u20ac87.51\nMaintenance visit\n1\n\u20ac93.12\n\u20ac93.12\nSubtotal\n\u20ac384.19\nTax (5%)\n\u20ac19.21\nTotal\n\u20ac403.40\nThank you for your business."
+}

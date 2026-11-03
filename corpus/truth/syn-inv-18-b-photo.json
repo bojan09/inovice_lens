@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Kestrel Office Goods"
+ },
+ "number": "#91911",
+ "issueDate": "2026-05-15",
+ "dueDate": "2026-05-29",
+ "currency": "USD",
+ "taxRatePercent": "0",
+ "subtotalMinor": 139851,
+ "taxMinor": 0,
+ "totalMinor": 139851,
+ "rows": [
+  {
+   "description": "Maintenance visit",
+   "qty": "3",
+   "unitMinor": 46617,
+   "totalMinor": 139851
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "TAX INVOICE\nKestrel Office Goods\nUnit 4, Park Road\nInvoice #: #91911\nIssued: 15/05/2026\nPayment due: 29/05/2026\nBilled to: Pinecrest Academy\nItem\nQuantity\nPrice\nAmount\nMaintenance visit\n3\nUSD 466.17\nUSD 1,398.51\nSub Total\nUSD 1,398.51\nVAT (0%)\nUSD 0.00\nAmount Due\nUSD 1,398.51\nThank you for your business."
+}

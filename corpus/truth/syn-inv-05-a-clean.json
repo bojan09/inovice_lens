@@ -1,0 +1,35 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Quartz Logistics"
+ },
+ "number": "A827-79",
+ "issueDate": "2026-04-28",
+ "dueDate": "2026-05-28",
+ "currency": null,
+ "taxRatePercent": "10",
+ "subtotalMinor": 293931,
+ "taxMinor": 29393,
+ "totalMinor": 323324,
+ "rows": [
+  {
+   "description": "Desk lamp",
+   "qty": "4",
+   "unitMinor": 55993,
+   "totalMinor": 223972
+  },
+  {
+   "description": "USB-C cable 2m",
+   "qty": "1",
+   "unitMinor": 69959,
+   "totalMinor": 69959
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "Quartz Logistics\n12 Market Street, Springfield\nINVOICE\nInvoice No: A827-79\nDate: 2026-04-28\nDue Date: 2026-05-28\nBill to:\nPinecrest Academy\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nDesk lamp\n4\n559.93\n2,239.72\nUSB-C cable 2m\n1\n699.59\n699.59\nSubtotal\n2,939.31\nTax (10%)\n293.93\nTotal\n3,233.24\nThank you for your business."
+}

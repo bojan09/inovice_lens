@@ -1,0 +1,32 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "FRESH BITE CAFE"
+ },
+ "number": null,
+ "issueDate": "2025-09-06",
+ "dueDate": null,
+ "currency": null,
+ "taxRatePercent": "10",
+ "subtotalMinor": 3781,
+ "taxMinor": 378,
+ "totalMinor": 4159,
+ "rows": [
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1702
+  },
+  {
+   "description": "Notebook",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 2079
+  }
+ ],
+ "transcript": "FRESH BITE CAFE\n5 High Street\nDate: 2025-09-06 09:13\nCashier: 8\nCoffee\n17.02\nNotebook\n20.79\nSUBTOTAL\n37.81\nTAX 10%\n3.78\nTOTAL\n41.59\nVISA **** 4821\nThank you for shopping"
+}

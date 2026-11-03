@@ -1,0 +1,35 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Maple Street Print Shop"
+ },
+ "number": "INV-2026-0697",
+ "issueDate": "2026-12-26",
+ "dueDate": "2027-01-25",
+ "currency": "EUR",
+ "taxRatePercent": "0",
+ "subtotalMinor": 1023016,
+ "taxMinor": 0,
+ "totalMinor": 1023016,
+ "rows": [
+  {
+   "description": "Desk lamp",
+   "qty": "10",
+   "unitMinor": 101978,
+   "totalMinor": 1019780
+  },
+  {
+   "description": "Consulting (hours)",
+   "qty": "4",
+   "unitMinor": 809,
+   "totalMinor": 3236
+  }
+ ],
+ "customer": {
+  "name": "Delta Media Group"
+ },
+ "transcript": "TAX INVOICE\nMaple Street Print Shop\nUnit 4, Park Road\nInvoice #: INV-2026-0697\nIssued: 26 Dec 2026\nPayment due: 25 Jan 2027\nBilled to: Delta Media Group\nItem\nQuantity\nPrice\nAmount\nDesk lamp\n10\nEUR 1019.78\nEUR 10197.80\nConsulting (hours)\n4\nEUR 8.09\nEUR 32.36\nSub Total\nEUR 10230.16\nVAT (0%)\nEUR 0.00\nAmount Due\nEUR 10230.16\nThank you for your business."
+}

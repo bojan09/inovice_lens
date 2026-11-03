@@ -52,6 +52,32 @@ Open a file on Convert, wait for "Recognized" / "Needs review", press **Review &
 
 Screenshots: `docs/phase3/screenshots/` (5 viewports x light/dark x original+highlight, warning state, table, text, preview).
 
+## Measured on a SYNTHETIC corpus (follow-up to Phase 3)
+
+No real documents were available, so `corpus/make_corpus.py` generates 34 invented documents (24 invoices in 4 layouts/fonts, 10 receipts; clean renders and phone-photo simulations with tilt, shadow, blur, noise, JPEG; varied labels, date formats, currencies, thousands separators, 1-6 rows, fractional quantities). Truth is written from the generator data, never from OCR; where a page prints no currency, truth currency is `null`. The documents are git-ignored (regenerate with `python3 -I corpus/make_corpus.py`); truth files are committed (`corpus/truth/syn-*.json`, `"source": "synthetic"`).
+
+Run: `python3 -I corpus/make_corpus.py && node tests/eval/predict.mjs && npm run eval -- corpus/predictions --split tune` (use `--split heldout` for the held-out set). `predict.mjs` drives the real app (pdf.js, Tesseract, editor extraction) and reads the values the editor shows, with no edits.
+
+| | tune (24 docs) before | tune after | held-out (10 docs) before | held-out after |
+|---|---|---|---|---|
+| micro precision | 98.5% | 98.9% | 97.9% | 98.7% |
+| micro recall | 76.2% | 98.6% | 81.5% | 95.2% |
+| micro F1 | 85.9% | 98.7% | 89.0% | 96.9% |
+| exact-match docs | 25% | 75% | 20% | 70% |
+| document type suggestion | 34/34 correct (whole corpus) | | | |
+| OCR text CER / WER | 11.5% / 8.7% | 9.6% / 6.4% | 9.3% / 7.8% | 7.9% / 6.3% |
+
+What was wrong and fixed (found ONLY on the tune split; the held-out split was looked at as aggregate numbers, never per document):
+- **Tilted photos split lines** (a 1.8 degree tilt moves a baseline by more than a text height across the page): line grouping now estimates the tilt from neighbouring words and groups along it. Raw coordinates are untouched. This also changes the normalized text shown on Convert (for tilted pages only).
+- **"13.48 USD" / "USD 13.48"** line-item amounts were not recognised as amounts: a bare currency code now joins its neighbouring decimal number.
+- **"No. 2025/071"** and **"#69621"** invoice numbers were missed (the "#" is kept, it is part of the printed number).
+- **The corpus itself was wrong** for pages that print no currency at all (truth said EUR); truth is now `null` there. Without this, the first round overstated the currency error.
+
+What the numbers do NOT say:
+- This is one generator, written by the same author as the extractor. 34 documents; one run each (OCR is deterministic here, but there is no variance estimate). The held-out split is 10 documents and was seen in aggregate before tuning. Treat 96.9% held-out F1 as "robust to this generator's variations", **not** as real-world accuracy. Real invoices (stamps, logos, multi-column layouts, other fonts, non-English text, crumpled paper) will score lower. Real-world accuracy remains UNAVAILABLE.
+- Remaining misses are mostly OCR errors (a bold "Due" read as "DUsJR" hides a total; a trailing "." after a supplier name; quantity "1.5" read oddly). They surface as empty fields or review warnings, not silently wrong amounts: precision stays above 98%.
+- Receipts are scored without qty/unit price (not extracted by design).
+
 ## Known limitations (read before relying on it)
 
 - Extraction is **heuristic and tuned on synthetic fixtures** (invented invoice, receipt, table). `corpus/` is still empty, so real-document accuracy is **unavailable**. Expect misses on multi-line descriptions, amounts split across lines, tax tables with several rates, non-English labels, right-to-left layouts.

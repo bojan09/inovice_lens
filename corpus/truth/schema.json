@@ -9,7 +9,7 @@
   "properties": {
     "docType": { "enum": ["invoice", "receipt", "credit_note", "other"] },
     "language": { "type": "string", "description": "BCP-47 tag, expected 'en'", "examples": ["en"] },
-    "source": { "enum": ["real", "public-sroie", "public-cord"] },
+    "source": { "enum": ["real", "public-sroie", "public-cord", "synthetic"] },
     "keyedBy": { "type": "string", "minLength": 1, "description": "Human who keyed this truth (name or initials)" },
     "transcript": { "type": "string", "description": "Optional full hand-typed text, enables CER/WER" },
     "supplier": { "$ref": "#/$defs/party" },

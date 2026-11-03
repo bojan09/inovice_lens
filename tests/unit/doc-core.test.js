@@ -306,3 +306,38 @@ test('history: seal() stops coalescing; no-op edits are not recorded; limit drop
   while (small.undo()) steps += 1;
   assert.equal(steps, 2);
 });
+
+// ------------------------------------------------------------------ tuning found on the synthetic corpus (tune split)
+test('lines: a tilted page (1.8 degrees) still groups words into the printed lines; raw coordinates are untouched', () => {
+  const tilt = Math.tan((1.8 * Math.PI) / 180);
+  const rows = [['Invoice #:', 90, 'INV-2026-0902'], ['Issued:', 90, '10 May 2026'], ['Payment due:', 90, '09 Jun 2026']];
+  const items = [];
+  rows.forEach(([label, x, value], r) => {
+    const y0 = 200 + r * 48;
+    const put = (text, x0) => items.push(...layout([{ y: 0, x: x0, text }]).map((it) => ({ ...it, y: y0 + tilt * (it.x + it.w / 2) })));
+    put(label, x); put(value, x + 260);
+    put(`R${r}`, 900); // a far-right word on the same printed line: drifts ~30px lower than the first word
+  });
+  const before = JSON.stringify(items);
+  const lines = itemsToLines(items);
+  assert.deepEqual(lines, ['Invoice #: INV-2026-0902 R0', 'Issued: 10 May 2026 R1', 'Payment due: 09 Jun 2026 R2']);
+  assert.equal(JSON.stringify(items), before);
+  assert.equal(itemsToLines(layout([{ y: 10, x: 0, text: 'A B C D E F G H' }, { y: 60, x: 0, text: 'I J K L M N O P' }])).length, 2, 'a level page is unchanged');
+});
+
+test('extract: currency printed as a suffix or prefix code belongs to the amount in line items', () => {
+  const header = [{ y: 10, x: 10, text: 'Shop Ltd' }, { y: 100, x: 10, text: 'Description' }, { y: 100, x: 400, text: 'Qty' }, { y: 100, x: 480, text: 'Unit price' }, { y: 100, x: 700, text: 'Total' }];
+  const items = layout([...header, { y: 150, x: 10, text: 'Pipe' }, { y: 150, x: 400, text: '2' }, { y: 150, x: 480, text: '13.48 USD' }, { y: 150, x: 700, text: '26.96 USD' },
+    { y: 200, x: 10, text: 'Cable' }, { y: 200, x: 400, text: '1' }, { y: 200, x: 480, text: 'USD 5.00' }, { y: 200, x: 700, text: 'USD 5.00' }]);
+  const ex = extractDocument({ result: resultOf(items), docType: 'invoice' });
+  assert.deepEqual(ex.items.map((i) => ['qty', 'unit', 'total'].map((c) => i.cells[c].value)), [['2', '13.48 USD', '26.96 USD'], ['1', 'USD 5.00', 'USD 5.00']]);
+});
+
+test('extract: invoice number after a bare "No." label keeping a leading "#"', () => {
+  const a = extractDocument({ result: resultOf(layout([{ y: 10, x: 10, text: 'Shop Ltd' }, { y: 60, x: 10, text: 'No. 2025/071' }])), docType: 'invoice' });
+  assert.equal(a.fields.number.value, '2025/071');
+  const b = extractDocument({ result: resultOf(layout([{ y: 10, x: 10, text: 'Shop Ltd' }, { y: 60, x: 10, text: 'Invoice No: #69621' }])), docType: 'invoice' });
+  assert.equal(b.fields.number.value, '#69621', 'the # is part of the printed number');
+  const c = extractDocument({ result: resultOf(layout([{ y: 10, x: 10, text: 'Shop Ltd' }, { y: 60, x: 10, text: 'Phone no. is on file' }])), docType: 'invoice' });
+  assert.equal(c.fields.number.value, '', '"no." inside a sentence is not an invoice number');
+});

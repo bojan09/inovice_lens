@@ -1,0 +1,35 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Kestrel Office Goods"
+ },
+ "number": "#69621",
+ "issueDate": "2026-04-11",
+ "dueDate": "2026-05-11",
+ "currency": "EUR",
+ "taxRatePercent": "5",
+ "subtotalMinor": 23902,
+ "taxMinor": 1195,
+ "totalMinor": 25097,
+ "rows": [
+  {
+   "description": "Office chair",
+   "qty": "2",
+   "unitMinor": 3331,
+   "totalMinor": 6662
+  },
+  {
+   "description": "Consulting (hours)",
+   "qty": "4",
+   "unitMinor": 4310,
+   "totalMinor": 17240
+  }
+ ],
+ "customer": {
+  "name": "Atlas Engineering Ltd"
+ },
+ "transcript": "Kestrel Office Goods\n12 Market Street, Springfield\nINVOICE\nInvoice No: #69621\nDate: Apr 11, 2026\nDue Date: May 11, 2026\nBill to:\nAtlas Engineering Ltd\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nOffice chair\n2\n\u20ac33.31\n\u20ac66.62\nConsulting (hours)\n4\n\u20ac43.10\n\u20ac172.40\nSubtotal\n\u20ac239.02\nTax (5%)\n\u20ac11.95\nTotal\n\u20ac250.97\nThank you for your business."
+}

@@ -1,0 +1,29 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Orion Tech Services"
+ },
+ "number": "INV-2026-0691",
+ "issueDate": "2026-07-04",
+ "dueDate": null,
+ "currency": "EUR",
+ "taxRatePercent": "0",
+ "subtotalMinor": 1008,
+ "taxMinor": 0,
+ "totalMinor": 1008,
+ "rows": [
+  {
+   "description": "USB-C cable 2m",
+   "qty": "4",
+   "unitMinor": 252,
+   "totalMinor": 1008
+  }
+ ],
+ "customer": {
+  "name": "Summit Dental Clinic"
+ },
+ "transcript": "Orion Tech Services\n12 Market Street, Springfield\nINVOICE\nInvoice No: INV-2026-0691\nDate: 2026-07-04\nBill to:\nSummit Dental Clinic\n45 Industrial Ave\nDescription\nQty\nUnit Price\nTotal\nUSB-C cable 2m\n4\n2.52 EUR\n10.08 EUR\nSubtotal\n10.08 EUR\nTax (0%)\n0.00 EUR\nTotal\n10.08 EUR\nThank you for your business."
+}

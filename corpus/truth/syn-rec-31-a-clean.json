@@ -1,0 +1,38 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "CITY PHARMACY"
+ },
+ "number": null,
+ "issueDate": "2026-03-18",
+ "dueDate": null,
+ "currency": null,
+ "taxRatePercent": "8",
+ "subtotalMinor": 964,
+ "taxMinor": 77,
+ "totalMinor": 1041,
+ "rows": [
+  {
+   "description": "Batteries AA",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 393
+  },
+  {
+   "description": "Coffee",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 198
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 373
+  }
+ ],
+ "transcript": "CITY PHARMACY\n5 High Street\nDate: 18/03/2026 12:18\nCashier: 6\nBatteries AA\n3.93\nCoffee\n1.98\nBread\n3.73\nSUBTOTAL\n9.64\nTAX 8%\n0.77\nTOTAL\n10.41\nVISA **** 4821\nThank you for shopping"
+}

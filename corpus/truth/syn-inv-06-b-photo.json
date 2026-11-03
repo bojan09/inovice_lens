@@ -1,0 +1,41 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Quartz Logistics"
+ },
+ "number": "INV-2026-0902",
+ "issueDate": "2026-05-10",
+ "dueDate": "2026-06-09",
+ "currency": null,
+ "taxRatePercent": "0",
+ "subtotalMinor": 1391748,
+ "taxMinor": 0,
+ "totalMinor": 1391748,
+ "rows": [
+  {
+   "description": "Software licence",
+   "qty": "4",
+   "unitMinor": 116006,
+   "totalMinor": 464024
+  },
+  {
+   "description": "Training session",
+   "qty": "4",
+   "unitMinor": 222324,
+   "totalMinor": 889296
+  },
+  {
+   "description": "Printer paper A4",
+   "qty": "4",
+   "unitMinor": 9607,
+   "totalMinor": 38428
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "TAX INVOICE\nQuartz Logistics\nUnit 4, Park Road\nInvoice #: INV-2026-0902\nIssued: 10 May 2026\nPayment due: 09 Jun 2026\nBilled to: Pinecrest Academy\nItem\nQuantity\nPrice\nAmount\nSoftware licence\n4\n1160.06\n4640.24\nTraining session\n4\n2223.24\n8892.96\nPrinter paper A4\n4\n96.07\n384.28\nSub Total\n13917.48\nVAT (0%)\n0.00\nAmount Due\n13917.48\nThank you for your business."
+}

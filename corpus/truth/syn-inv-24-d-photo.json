@@ -1,0 +1,41 @@
+{
+ "docType": "invoice",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "Orion Tech Services"
+ },
+ "number": "2026/094",
+ "issueDate": "2025-09-03",
+ "dueDate": null,
+ "currency": null,
+ "taxRatePercent": "18",
+ "subtotalMinor": 261556,
+ "taxMinor": 47080,
+ "totalMinor": 308636,
+ "rows": [
+  {
+   "description": "Consulting (hours)",
+   "qty": "1",
+   "unitMinor": 30644,
+   "totalMinor": 30644
+  },
+  {
+   "description": "Software licence",
+   "qty": "1",
+   "unitMinor": 130036,
+   "totalMinor": 130036
+  },
+  {
+   "description": "Consulting (hours)",
+   "qty": "0.5",
+   "unitMinor": 201751,
+   "totalMinor": 100876
+  }
+ ],
+ "customer": {
+  "name": "Pinecrest Academy"
+ },
+ "transcript": "Orion Tech Services\nINVOICE\nNo. 2026/094\nDate: 2025-09-03\nBill to:\nPinecrest Academy\nDescription\nQty\nUnit Price\nTotal\nConsulting (hours)\n1\n306.44\n306.44\nSoftware licence\n1\n1,300.36\n1,300.36\nConsulting (hours)\n0.5\n2,017.51\n1,008.76\nSubtotal\n2,615.56\nTax (18%)\n470.80\nTotal\n3,086.36\nThank you for your business."
+}

@@ -1,0 +1,38 @@
+{
+ "docType": "receipt",
+ "language": "en",
+ "source": "synthetic",
+ "keyedBy": "corpus/make_corpus.py (written from the generator data, not from OCR)",
+ "supplier": {
+  "name": "CORNER MARKET"
+ },
+ "number": null,
+ "issueDate": "2025-05-13",
+ "dueDate": null,
+ "currency": null,
+ "taxRatePercent": "8",
+ "subtotalMinor": 5260,
+ "taxMinor": 421,
+ "totalMinor": 5681,
+ "rows": [
+  {
+   "description": "Apples 1kg",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1988
+  },
+  {
+   "description": "Bread",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1307
+  },
+  {
+   "description": "Milk 1L",
+   "qty": null,
+   "unitMinor": null,
+   "totalMinor": 1965
+  }
+ ],
+ "transcript": "CORNER MARKET\n5 High Street\nDate: 2025-05-13 18:39\nCashier: 6\nApples 1kg\n19.88\nBread\n13.07\nMilk 1L\n19.65\nSUBTOTAL\n52.60\nTAX 8%\n4.21\nTOTAL\n56.81\nVISA **** 4821\nThank you for shopping"
+}
