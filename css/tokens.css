@@ -1,0 +1,200 @@
+/* InvoiceLens design tokens.
+   Source: docs/reference/approved-ui.webp (1536x1024 showcase, AI-rendered, low-res).
+   Every value with a trailing "est" comment is estimated from pixels, not read from a spec.
+   Pixel sizes assume the showcase panels are ~0.78x of real size (see docs/design-tokens.md).
+   Breakpoints (use in @media, custom properties cannot be used there):
+     mobile        : < 640px   (bottom tab bar, single column)
+     tablet        : 640px - 1023px (portrait editor: top bar, no sidebar)
+     desktop       : >= 1024px (sidebar)
+     compact side  : 1024px - 1279px (icon-only sidebar optional)
+     wide          : >= 1280px
+*/
+
+:root {
+  color-scheme: light;
+
+  /* ---- Colors: light ---- */
+  --color-bg: #f5f9fc;               /* est  app canvas behind panels */
+  --color-surface: #ffffff;          /* est  header, sidebar, cards, inputs, editor panels */
+  --color-surface-2: #eef3f9;        /* est  thumbnails rail, table header, search field, hovers */
+  --color-sidebar: #fafcfe;          /* est */
+  --color-border: #dfe6ef;           /* est  hairlines, card edges */
+  --color-border-strong: #8793a6;    /* est  input/control borders (3:1 non-text) */
+  --color-text: #0f172a;             /* est  headings and body */
+  --color-text-muted: #5b6578;       /* est  helper text, captions, placeholders */
+  --color-text-on-accent: #ffffff;
+  --color-accent: #1e68fc;           /* est  primary button, progress, toggles */
+  --color-accent-hover: #1558e0;     /* est */
+  --color-accent-text: #1558e0;      /* est  accent used as text on light (AA) */
+  --color-accent-soft: #e6eefe;      /* est  selected nav item, selected thumbnail bg */
+  --color-focus-ring: #1e68fc;       /* est */
+  --color-success: #16a34a;          /* est  icon/progress only, not text */
+  --color-warning: #d99a0b;          /* est  icon */
+  --color-danger: #dc2626;           /* est */
+  --color-info: #1e68fc;             /* est */
+  --color-progress-track: #ccd3e7;   /* est */
+  --color-scrim: rgb(15 23 42 / 0.5); /* est */
+
+  /* status chips (bg/fg) */
+  --chip-success-bg: #dcf5e3;  --chip-success-fg: #1b6b2f;   /* est  Completed, Invoice */
+  --chip-warning-bg: #fdf0d6;  --chip-warning-fg: #8a5a00;   /* est  Needs Review, Receipt */
+  --chip-danger-bg:  #fde4e1;  --chip-danger-fg:  #b42318;   /* est  Failed */
+  --chip-info-bg:    #e1ebfd;  --chip-info-fg:    #1d4fb8;   /* est  Processing */
+  --chip-neutral-bg: #e8edf4;  --chip-neutral-fg: #4b5568;   /* est  Queued, Table, Document */
+  --banner-warning-bg: #fdf2df; /* est  "1 item to review" strip */
+
+  /* ---- Fonts ---- */
+  /* Reference looks like Inter. Not bundled: stack uses Inter if installed/self-hosted,
+     else OS UI fonts. English/Latin only (app is English-only). No CDN. */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+
+  /* ---- Type scale (px) ---- */
+  --fs-xs: 11px;    /* est  captions, chips, "Local Storage" sublabel */
+  --fs-sm: 12px;    /* est  table cells, helper text, tab labels */
+  --fs-md: 13px;    /* est  nav, inputs, buttons */
+  --fs-base: 14px;  /* est  body */
+  --fs-lg: 16px;    /* est  panel titles */
+  --fs-xl: 20px;    /* est  page titles (Batch Processing, Settings) */
+  --fs-2xl: 32px;   /* est  hero title "Turn documents into editable files" */
+  --lh-tight: 1.2;
+  --lh-base: 1.5;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;   /* est  hero title, brand */
+
+  /* ---- Spacing (4px base) ---- */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---- Radii ---- */
+  --radius-xs: 4px;    /* est  chips */
+  --radius-sm: 6px;    /* est  buttons, inputs, nav items */
+  --radius-md: 8px;    /* est  cards, stat tiles */
+  --radius-lg: 12px;   /* est  dropzone, panels */
+  --radius-xl: 16px;   /* est  dialogs, phone/tablet shell inner */
+  --radius-full: 999px;
+
+  /* ---- Shadows (restrained; no glow) ---- */
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.05);                          /* est */
+  --shadow-md: 0 2px 8px rgb(15 23 42 / 0.07);                          /* est  cards, document page */
+  --shadow-lg: 0 8px 24px rgb(15 23 42 / 0.12);                         /* est  menus, dialogs */
+
+  /* ---- Controls ---- */
+  --control-h-sm: 28px;  /* est  chips row actions, toolbar buttons */
+  --control-h-md: 32px;  /* est  buttons (Export, Add Files, Browse Files) */
+  --control-h-lg: 40px;  /* est  inputs/selects in forms and settings */
+  --control-touch: 44px; /* a11y minimum on touch layouts */
+  --icon-sm: 16px;       /* est */
+  --icon-md: 20px;       /* est  nav icons */
+  --icon-lg: 24px;
+  --icon-stroke: 1.75;   /* est  outline icons, rounded caps */
+
+  /* ---- Layout ---- */
+  --sidebar-w: 200px;          /* est  expanded desktop */
+  --sidebar-w-compact: 64px;   /* est  icon-only, not shown in reference */
+  --header-h: 56px;            /* est  top bar with search / back-to-workspace */
+  --nav-item-h: 40px;          /* est */
+  --pages-rail-w: 104px;       /* est  editor page thumbnails */
+  --editor-panel-w: 340px;     /* est  right Extracted Data panel */
+  --settings-subnav-w: 200px;  /* est */
+  --bottom-tab-h: 56px;        /* est  mobile tab bar */
+  --content-max: 1120px;       /* est */
+
+  /* ---- Motion / z ---- */
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --z-sticky: 10;
+  --z-dropdown: 40;
+  --z-modal: 100;
+}
+
+/* ---- Dark: explicit ---- */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: #0d151e;               /* est */
+  --color-surface: #131a28;          /* est */
+  --color-surface-2: #1a2231;        /* est */
+  --color-sidebar: #131d2e;          /* est  slightly bluer than main in reference */
+  --color-border: #2a3446;           /* est */
+  --color-border-strong: #5f6e86;    /* est */
+  --color-text: #e8edf5;             /* est */
+  --color-text-muted: #98a3b8;       /* est */
+  --color-text-on-accent: #ffffff;
+  --color-accent: #1f6bff;           /* est */
+  --color-accent-hover: #3a7fff;     /* est */
+  --color-accent-text: #6aa3ff;      /* est */
+  --color-accent-soft: #16295a;      /* est */
+  --color-focus-ring: #6aa3ff;       /* est */
+  --color-success: #3ddc84;          /* est */
+  --color-warning: #f0b84a;          /* est */
+  --color-danger: #ff6b63;           /* est */
+  --color-info: #6aa3ff;             /* est */
+  --color-progress-track: #2a3546;   /* est */
+  --color-scrim: rgb(0 0 0 / 0.6);   /* est */
+
+  --chip-success-bg: #1e3d26;  --chip-success-fg: #7fd696;   /* est */
+  --chip-warning-bg: #4a3510;  --chip-warning-fg: #f0b84a;   /* est */
+  --chip-danger-bg:  #4a1d1d;  --chip-danger-fg:  #ff9a93;   /* est */
+  --chip-info-bg:    #1a3a6e;  --chip-info-fg:    #8ab8ff;   /* est */
+  --chip-neutral-bg: #2a3546;  --chip-neutral-fg: #aab4c5;   /* est */
+  --banner-warning-bg: #3a2c0c; /* est */
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-md: 0 2px 8px rgb(0 0 0 / 0.45);
+  --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.55);
+}
+
+/* ---- Dark: system preference when no explicit choice ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --color-bg: #0d151e;
+    --color-surface: #131a28;
+    --color-surface-2: #1a2231;
+    --color-sidebar: #131d2e;
+    --color-border: #2a3446;
+    --color-border-strong: #5f6e86;
+    --color-text: #e8edf5;
+    --color-text-muted: #98a3b8;
+    --color-text-on-accent: #ffffff;
+    --color-accent: #1f6bff;
+    --color-accent-hover: #3a7fff;
+    --color-accent-text: #6aa3ff;
+    --color-accent-soft: #16295a;
+    --color-focus-ring: #6aa3ff;
+    --color-success: #3ddc84;
+    --color-warning: #f0b84a;
+    --color-danger: #ff6b63;
+    --color-info: #6aa3ff;
+    --color-progress-track: #2a3546;
+    --color-scrim: rgb(0 0 0 / 0.6);
+
+    --chip-success-bg: #1e3d26;  --chip-success-fg: #7fd696;
+    --chip-warning-bg: #4a3510;  --chip-warning-fg: #f0b84a;
+    --chip-danger-bg:  #4a1d1d;  --chip-danger-fg:  #ff9a93;
+    --chip-info-bg:    #1a3a6e;  --chip-info-fg:    #8ab8ff;
+    --chip-neutral-bg: #2a3546;  --chip-neutral-fg: #aab4c5;
+    --banner-warning-bg: #3a2c0c;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 2px 8px rgb(0 0 0 / 0.45);
+    --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "invoice-lens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Browser-only invoice/receipt OCR to editable file converter",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.js\"",
+    "eval": "node tests/eval/run.js"
+  },
+  "devDependencies": {
+    "fast-check": "^4.10.2"
+  }
+}

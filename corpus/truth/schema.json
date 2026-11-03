@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "invoice-lens-truth",
+  "title": "InvoiceLens ground-truth file (corpus/truth/<id>.json)",
+  "description": "Hand-keyed truth, never OCR-generated. Money fields are integer minor units. Same model shape as js/validation.js.",
+  "type": "object",
+  "required": ["docType", "language", "source", "keyedBy"],
+  "additionalProperties": false,
+  "properties": {
+    "docType": { "enum": ["invoice", "receipt", "credit_note", "other"] },
+    "language": { "type": "string", "description": "BCP-47 tag, expected 'en'", "examples": ["en"] },
+    "source": { "enum": ["real", "public-sroie", "public-cord"] },
+    "keyedBy": { "type": "string", "minLength": 1, "description": "Human who keyed this truth (name or initials)" },
+    "transcript": { "type": "string", "description": "Optional full hand-typed text, enables CER/WER" },
+    "supplier": { "$ref": "#/$defs/party" },
+    "customer": { "$ref": "#/$defs/party" },
+    "number": { "type": ["string", "null"] },
+    "issueDate": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "dueDate": { "type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" },
+    "taxRatePercent": { "type": ["string", "number", "null"] },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "description": { "type": ["string", "null"] },
+          "qty": { "type": ["string", "number", "null"], "description": "decimal, e.g. \"1.5\"" },
+          "unitMinor": { "type": ["integer", "null"] },
+          "totalMinor": { "type": ["integer", "null"] },
+          "currency": { "type": ["string", "null"], "pattern": "^[A-Z]{3}$" }
+        }
+      }
+    },
+    "subtotalMinor": { "type": ["integer", "null"] },
+    "taxMinor": { "type": ["integer", "null"] },
+    "totalMinor": { "type": ["integer", "null"] }
+  },
+  "$defs": {
+    "party": {
+      "type": "object",
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "taxId": { "type": ["string", "null"] },
+        "address": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
