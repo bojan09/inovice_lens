@@ -49,6 +49,12 @@ Unsupported pairs are disabled **with the reason shown** (e.g. Word/Excel cannot
 
 Screenshots: `docs/phase4/screenshots/`.
 
+## Follow-up verification (after the Phase 4 report)
+
+Asked to verify the two unverified items:
+- **Word / Excel / Google Sheets themselves: still not possible here** (no Microsoft Office or Google account). What was added instead: an automated Office-package integrity check on the generated `.xlsx` and `.docx` (every part has a content type, every relationship target exists, all XML parts are well-formed, no duplicate parts; passes) and enforcement of the limits Excel rejects files for (sheet names <= 31 chars without `[]:*?/\\`; cells > 32,767 characters are shortened with a warning). These reduce the risk of an "unreadable content" error; they do not prove Office opens the files.
+- **Real-document extraction accuracy: still unavailable.** The only real-invoice source reachable here (PyPI `invoice2data` sdist) ships no sample documents, and fetching other repositories was out of scope. The synthetic-corpus figures in PHASE3.md remain the only measurement.
+
 ## Known limitations
 
 - **Not pixel-faithful conversions.** Word/Excel are reconstructions of the corrected values; arbitrary layout is not reproduced. PDF "Original appearance" is the faithful mode.

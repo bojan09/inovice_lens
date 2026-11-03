@@ -251,3 +251,53 @@ test('ZIP: several exports bundled with unique names; python zipfile validates a
   assert.deepEqual(o.names, z.names);
   assert.ok(o.sizes.every((n) => n > 50));
 });
+
+// ------------------------------------------------------------------ Office package integrity (what Word/Excel reject files for)
+const ooxmlReport = (file) => JSON.parse(py(`
+import zipfile,sys,json,re,posixpath
+import xml.etree.ElementTree as ET
+z=zipfile.ZipFile(sys.argv[1]); names=z.namelist(); out={'bad':z.testzip(),'problems':[],'parts':len(names)}
+ct=ET.fromstring(z.read('[Content_Types].xml')); ns='{http://schemas.openxmlformats.org/package/2006/content-types}'
+defaults={d.get('Extension').lower() for d in ct.findall(ns+'Default')}; overrides={o.get('PartName') for o in ct.findall(ns+'Override')}
+for n in names:
+    if n=='[Content_Types].xml' or n.endswith('/'): continue
+    if '/'+n not in overrides and n.rsplit('.',1)[-1].lower() not in defaults: out['problems'].append('no content type: '+n)
+    if n.endswith(('.xml','.rels')):
+        try: ET.fromstring(z.read(n))
+        except Exception as e: out['problems'].append('not well-formed: '+n+' '+str(e))
+    if n.endswith('.rels'):
+        base=posixpath.dirname(posixpath.dirname(n))
+        for r in ET.fromstring(z.read(n)):
+            if r.get('TargetMode')=='External': continue
+            t=r.get('Target'); p=t.lstrip('/') if t.startswith('/') else posixpath.normpath(posixpath.join(base,t))
+            if p not in names: out['problems'].append('dangling relationship: '+n+' -> '+t)
+if len(set(n.lower() for n in names))!=len(names): out['problems'].append('duplicate part names')
+print(json.dumps(out))`, file).stdout);
+
+test('XLSX and DOCX packages: every part has a content type, every relationship resolves, all XML is well-formed', { skip: !HAVE.openpyxl }, async () => {
+  const { entry } = fixtureDoc();
+  for (const format of ['xlsx', 'docx']) {
+    const r = await exportOne({ entry, format });
+    const f = join(tmp(), `a.${format}`); writeFileSync(f, await bytesOf(r));
+    const rep = ooxmlReport(f);
+    assert.equal(rep.bad, null);
+    assert.deepEqual(rep.problems, [], `${format}: ${rep.problems.join('; ')}`);
+    assert.ok(rep.parts >= 5);
+  }
+});
+
+test('XLSX limits Excel enforces: sheet names are legal and over-long cells are shortened with a warning', async () => {
+  const { sheetName, EXCEL_CELL_LIMIT } = await import('../../js/export/xlsx.js');
+  assert.equal(sheetName('Page/text: [1]*?'), 'Page text 1');
+  assert.equal(sheetName('x'.repeat(50)).length, 31);
+  assert.equal(sheetName('///'), 'Sheet');
+  let { entry, doc } = fixtureDoc({ edit: false });
+  doc = M.setPageText(doc, 0, 'x'.repeat(EXCEL_CELL_LIMIT + 500));
+  const r = await exportOne({ entry: { doc, result: entry.result }, format: 'xlsx' });
+  assert.match(r.warnings[0], /longer than Excel's 32,767-character limit/);
+  if (HAVE.openpyxl) {
+    const f = join(tmp(), 'a.xlsx'); writeFileSync(f, await bytesOf(r));
+    const n = py('import openpyxl,sys;wb=openpyxl.load_workbook(sys.argv[1]);ws=wb["Page text"];print(max(len(str(c.value or "")) for row in ws.iter_rows() for c in row))', f).stdout.trim();
+    assert.equal(Number(n), EXCEL_CELL_LIMIT);
+  }
+});
