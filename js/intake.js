@@ -185,7 +185,7 @@ function isComplete(kind, b) {
   return true;
 }
 
-async function fingerprint(bytes, file) {
+export async function fingerprint(bytes, file) {
   try {
     if (globalThis.crypto?.subtle) {
       const digest = await globalThis.crypto.subtle.digest('SHA-256', bytes);

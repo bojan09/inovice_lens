@@ -8,6 +8,7 @@ export function createRecognitionSession({ runner, concurrency = 1 } = {}) {
   const queue = [];
   const listeners = new Set();
   let running = 0;
+  let paused = false;
 
   const view = (e) => ({
     id: e.id, status: e.status, progress: e.progress, result: e.result, error: e.error,
@@ -33,7 +34,7 @@ export function createRecognitionSession({ runner, concurrency = 1 } = {}) {
   }
 
   function pump() {
-    while (running < concurrency && queue.length) {
+    while (!paused && running < concurrency && queue.length) {
       const e = queue.shift();
       if (e.status !== STATUS.QUEUED) continue; // cancelled while waiting
       running += 1;
@@ -137,9 +138,40 @@ export function createRecognitionSession({ runner, concurrency = 1 } = {}) {
     emit();
   }
 
+  /** Stop STARTING new files. The file already being recognized finishes (a running OCR job cannot be suspended; Cancel stops it). */
+  function pause() { if (paused) return; paused = true; emit(); }
+  function resume() { if (!paused) return; paused = false; emit(); pump(); }
+
+  /** Re-queue every failed or cancelled file (error isolation: one bad file never blocks the others). */
+  function retryFailed() {
+    let n = 0;
+    for (const e of entries.values()) if (e.status === STATUS.FAILED || e.status === STATUS.CANCELLED) { requeue(e); n += 1; }
+    return n;
+  }
+
+  /** Put a file straight into a finished state (restoring a saved project) without running anything. */
+  function restore(item, { status = STATUS.RECOGNIZED, result = null, rotation = 0, override = null } = {}) {
+    if (entries.has(item.id)) return false;
+    if (![STATUS.RECOGNIZED, STATUS.REVIEW, STATUS.FAILED, STATUS.CANCELLED].includes(status)) throw new Error(`Cannot restore into ${status}`);
+    entries.set(item.id, { id: item.id, item, status, progress: { done: 0, total: 0, fraction: status === STATUS.RECOGNIZED || status === STATUS.REVIEW ? 1 : 0, note: '' }, result, error: status === STATUS.FAILED ? { code: 'restored', message: 'Recognition failed before this project was saved.' } : null, rotation, override, version: 0, controller: null });
+    emit();
+    return true;
+  }
+
+  const counts = () => {
+    const c = { total: 0, queued: 0, active: 0, recognized: 0, review: 0, failed: 0, cancelled: 0 };
+    for (const e of entries.values()) {
+      c.total += 1;
+      if (e.status === STATUS.QUEUED) c.queued += 1;
+      else if (isActive(e.status)) c.active += 1;
+      else c[e.status] += 1;
+    }
+    return c;
+  };
+
   function cancelAll() { [...entries.keys()].forEach(cancel); }
   function clear() { [...entries.keys()].forEach(remove); }
   const get = (id) => (entries.has(id) ? view(entries.get(id)) : null);
 
-  return { enqueue, cancel, cancelAll, retry, rotate, setOverride, remove, clear, get, snapshot, subscribe };
+  return { enqueue, cancel, cancelAll, retry, retryFailed, rotate, setOverride, remove, clear, get, snapshot, subscribe, pause, resume, restore, counts, get paused() { return paused; } };
 }

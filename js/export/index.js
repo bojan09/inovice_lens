@@ -6,6 +6,7 @@ import { buildOriginalPdf, buildStructuredPdf } from './pdf.js';
 import { buildCsv, buildPasteText } from './csv.js';
 import { safeStem, uniqueNames } from './util.js';
 import { loadFflate } from './libs.js';
+import { buildCombinedPdf, buildConsolidatedXlsx, buildConsolidatedCsv } from './consolidated.js';
 
 export const FORMATS = Object.freeze({
   pdf: { label: 'PDF', ext: 'pdf', modes: ['original', 'structured'] },
@@ -65,4 +66,24 @@ export async function zipResults(results, { now = new Date() } = {}) {
   for (let i = 0; i < results.length; i += 1) files[names[i]] = new Uint8Array(await results[i].blob.arrayBuffer());
   const bytes = zipSync(files, { level: 6, mtime: now });
   return { blob: new Blob([bytes], { type: 'application/zip' }), filename: `invoicelens-export-${now.toISOString().slice(0, 10)}.zip`, mime: 'application/zip', names };
+}
+
+/** Can several documents be combined into ONE file in this format? Reason when not. */
+export function combineReason(format) {
+  if (format === 'docx') return 'Word files are exported one per document (bundled in a ZIP): a combined Word document would lose each document\'s own layout.';
+  return null;
+}
+
+/**
+ * Several documents -> ONE file (combined PDF, consolidated workbook, consolidated CSV). The caller has already built the
+ * per-document PDFs when format is "pdf" (`results`), because they come from exportOne with the user's page choices.
+ */
+export async function exportCombined({ format, entries, results = [], csvTable = 'documents', labelPages = true, signal, now = new Date() }) {
+  const bad = combineReason(format);
+  if (bad) throw new Error(bad);
+  const stamp = now.toISOString().slice(0, 10);
+  if (format === 'pdf') return { ...(await buildCombinedPdf(results, { labelPages, signal, now })), filename: `invoicelens-combined_${stamp}.pdf`, data: results[0].data, doc: results[0].doc };
+  if (format === 'xlsx') return { ...(await buildConsolidatedXlsx(entries, { signal, now })), filename: `invoicelens-consolidated_${stamp}.xlsx`, data: null, doc: entries[0].doc };
+  const out = buildConsolidatedCsv(entries, csvTable, { now });
+  return { ...out, filename: `invoicelens-consolidated_${csvTable}_${stamp}.csv`, data: null, doc: entries[0].doc };
 }

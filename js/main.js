@@ -15,6 +15,9 @@ import { createWorkspace } from './doc/workspace.js';
 import { createEditor } from './ui/editor/editor.js';
 import { parseEditorId } from './router.js';
 import { createExportDialog } from './ui/export/exportDialog.js';
+import { createBatchView } from './ui/batch/batchView.js';
+import { createProjectsView } from './ui/projects/projectsView.js';
+import { createProjectsController } from './projects/controller.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -35,7 +38,7 @@ const known = new Set();
 store.subscribe(({ items }) => {
   const ids = new Set(items.map((i) => i.id));
   for (const id of known) if (!ids.has(id)) { known.delete(id); session.remove(id); }
-  for (const it of items) if (!known.has(it.id)) { known.add(it.id); session.enqueue(it); }
+  for (const it of items) if (!known.has(it.id)) { known.add(it.id); if (!it.restoring) session.enqueue(it); }
 });
 
 // screen-reader announcements for finished files (visual state lives on the cards)
@@ -60,7 +63,41 @@ session.subscribe((snap) => {
 const workspace = createWorkspace({ store, session });
 const srLive = (m) => { $('sr-live').textContent = m; };
 const exporter = createExportDialog({ workspace, store, session, engines: real.engines, toaster, srLive });
-editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive, onExport: (ids, from) => exporter.open(ids, from) });
+const projects = createProjectsController({ store, session, workspace, engines: real.engines });
+editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive, onExport: (ids, from) => exporter.open(ids, from), saveInfo: () => projects.status });
+projects.subscribe(() => editor.refreshSave());
+
+const download = (blob, filename) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+};
+const batch = createBatchView({ root: $('batch-root'), store, session, workspace, toaster, srLive, onExport: (ids, from) => exporter.open(ids, from) });
+const projectsUi = createProjectsView({ root: $('projects-root'), controller: projects, store, toaster, srLive, goConvert: () => nav.go('convert'), download });
+
+// Save project (explicit consent happens inside the dialog) + autosave status in the sidebar
+const saveBtn = $('save-project-btn');
+saveBtn.addEventListener('click', () => projectsUi.saveFlow(saveBtn));
+const pstat = $('project-status');
+const renderProjectStatus = () => {
+  const st = projects.status;
+  saveBtn.disabled = store.getState().items.length === 0;
+  saveBtn.textContent = st.project ? 'Save as new project…' : 'Save project…';
+  if (!st.project) { pstat.hidden = true; pstat.replaceChildren(); return; }
+  pstat.hidden = false;
+  pstat.dataset.state = st.state;
+  const t = st.state === 'saving' ? 'Saving…' : st.state === 'error' ? st.error : st.state === 'saved' && st.at ? `Saved ${st.at.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit' })}` : 'Changes will be saved';
+  const stop = document.createElement('button');
+  stop.type = 'button'; stop.className = 'link-btn'; stop.textContent = 'Stop autosave';
+  stop.addEventListener('click', () => { projects.stopAutosave(); toaster.show('Autosave stopped. The project stays saved as it was.', 'info'); });
+  pstat.replaceChildren(document.createTextNode(`Project “${st.project.name}”. ${t} `), stop);
+};
+projects.subscribe(renderProjectStatus);
+store.subscribe(renderProjectStatus);
+renderProjectStatus();
+nav.onShow?.((v) => { if (v === 'projects') projectsUi.refresh(); });
 
 // Convert page: Export is available as soon as one file has a result
 const convertBtn = $('convert-btn');
@@ -97,7 +134,7 @@ initIntake({
   cameraBtn: $('camera-btn'),
   galleryBtn: $('gallery-btn'),
   toaster,
-  goToConvert: () => { if (location.hash && !/^#\/?convert/.test(location.hash)) nav.go('convert'); },
+  goToConvert: () => { if (location.hash && !/^#\/?(convert|batch)/.test(location.hash)) nav.go('convert'); },
 });
 
 $('cancel-all').addEventListener('click', () => session.cancelAll());
@@ -119,11 +156,13 @@ $('search').addEventListener('input', (e) => {
 
 // Edits are not persisted until a later phase: warn before the tab is closed or reloaded with unsaved edits.
 window.addEventListener('beforeunload', (e) => {
-  if (workspace.hasUnsavedEdits()) { e.preventDefault(); e.returnValue = ''; }
+  const st = projects.status;
+  const safe = st.project && st.state === 'saved'; // edits already committed to the saved project
+  if (workspace.hasUnsavedEdits() && !safe) { e.preventDefault(); e.returnValue = ''; }
 });
 
 // Release preview URLs when the page goes away.
-window.addEventListener('pagehide', () => { exporter.close(); workspace.dispose(); session.clear(); real.dispose(); store.destroy(); });
+window.addEventListener('pagehide', () => { projects.dispose(); exporter.close(); workspace.dispose(); session.clear(); real.dispose(); store.destroy(); });
 
 const storageEls = { valueEl: $('storage-value'), meterEl: $('storage-meter'), fillEl: $('storage-fill') };
 updateStorageMeter(storageEls);

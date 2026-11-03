@@ -53,7 +53,6 @@ test('capture tablet drawer + theme menu + coming-soon', async () => {
   await c.page.click('#theme-btn');
   await c.page.screenshot({ path: `${OUT}desktop-dark-5-theme-menu.png`, clip: { x: 1040, y: 0, width: 400, height: 220 } });
   await c.page.keyboard.press('Escape');
-  await c.page.goto(`${app.base}#/batch`);
-  await c.page.screenshot({ path: `${OUT}desktop-dark-6-coming-soon.png` });
+  // (the Phase 2 "coming soon" screenshot of Batch is kept as historical evidence; Batch is a real screen since Phase 5)
   await c.context.close();
 });

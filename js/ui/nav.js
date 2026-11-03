@@ -12,6 +12,7 @@ export function initNav({ onRoute } = {}) {
   const drawerMql = window.matchMedia('(max-width: 1023.98px)');
   let first = true;
 
+  const showListeners = new Set();
   function show(id) {
     views.forEach((v) => { v.hidden = v.dataset.view !== id; });
     main.dataset.view = id;
@@ -22,6 +23,7 @@ export function initNav({ onRoute } = {}) {
     });
     document.title = `${VIEWS[id].title} · InvoiceLens`;
     onRoute?.(id);
+    showListeners.forEach((fn) => fn(id));
   }
 
   function route() {
@@ -70,5 +72,5 @@ export function initNav({ onRoute } = {}) {
 
   window.addEventListener('hashchange', route);
   route();
-  return { go: (id) => { location.hash = `#/${id}`; } };
+  return { go: (id) => { location.hash = `#/${id}`; }, onShow: (fn) => { showListeners.add(fn); fn(parseRoute(location.hash)); } };
 }

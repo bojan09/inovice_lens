@@ -23,12 +23,12 @@ const MIME = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp', pdf: 'ap
 const FOUR_BUF = ['sample.jpg', 'sample.png', 'sample.webp', 'sample.pdf'].map((name) => ({ name, mimeType: MIME[name.split('.')[1]], buffer: readFixture(name) }));
 
 // ---------------------------------------------------------------- navigation
-test('navigation: 4 views work, aria-current follows, unavailable views say Coming in Phase N', async () => {
+test('navigation: 4 views work, aria-current follows, views that are not built yet say Coming in Phase N', async () => {
   const { page, problems, context } = await open();
   const expect = {
     convert: { h1: /Turn documents into editable files/, title: /^Convert/ },
-    batch: { h1: /Batch Processing/, title: /^Batch Processing/, soon: 'Coming in Phase 5' },
-    projects: { h1: /Saved Projects/, title: /^Saved Projects/, soon: 'Coming in Phase 5' },
+    batch: { h1: /Batch Processing/, title: /^Batch Processing/ },
+    projects: { h1: /Saved Projects/, title: /^Saved Projects/ },
     settings: { h1: /Settings/, title: /^Settings/, soon: 'Coming in Phase 6' },
   };
   for (const [id, e] of Object.entries(expect)) {

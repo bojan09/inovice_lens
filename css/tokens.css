@@ -31,6 +31,7 @@
   --color-success: #16a34a;          /* est  icon/progress only, not text */
   --color-warning: #d99a0b;          /* est  icon */
   --color-danger: #dc2626;           /* est */
+  --color-on-danger: #ffffff;        /* text on a solid danger button (>= 4.5:1) */
   --color-info: #1e68fc;             /* est */
   --color-progress-track: #ccd3e7;   /* est */
   --color-scrim: rgb(15 23 42 / 0.5); /* est */
@@ -146,6 +147,7 @@
   --color-success: #3ddc84;          /* est */
   --color-warning: #f0b84a;          /* est */
   --color-danger: #ff6b63;           /* est */
+  --color-on-danger: #1a0707;
   --color-info: #6aa3ff;             /* est */
   --color-progress-track: #2a3546;   /* est */
   --color-scrim: rgb(0 0 0 / 0.6);   /* est */
@@ -184,6 +186,7 @@
     --color-success: #3ddc84;
     --color-warning: #f0b84a;
     --color-danger: #ff6b63;
+    --color-on-danger: #1a0707;
     --color-info: #6aa3ff;
     --color-progress-track: #2a3546;
     --color-scrim: rgb(0 0 0 / 0.6);

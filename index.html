@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/convert.css">
   <link rel="stylesheet" href="css/editor.css">
   <link rel="stylesheet" href="css/export.css">
+  <link rel="stylesheet" href="css/projects.css">
   <script type="module" src="js/main.js"></script>
 </head>
 <body>
@@ -39,6 +40,7 @@
         <p class="storage-label">Local Storage</p>
         <p class="storage-value" id="storage-value">Checking…</p>
         <div class="meter" id="storage-meter" role="progressbar" aria-label="Browser storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span id="storage-fill"></span></div>
+        <p class="project-status" id="project-status" role="status" hidden></p>
       </div>
     </aside>
     <div class="scrim" id="scrim" hidden></div>
@@ -130,6 +132,7 @@
               <div class="panel-actions">
                 <button type="button" class="btn btn-secondary" id="add-more" data-browse>Add files</button>
                 <button type="button" class="btn btn-secondary" id="cancel-all" hidden>Cancel all</button>
+                <button type="button" class="btn btn-secondary" id="save-project-btn" disabled>Save project…</button>
                 <button type="button" class="btn btn-secondary" id="clear-all">Clear all</button>
                 <button type="button" class="btn btn-primary" id="convert-btn" disabled aria-describedby="convert-note">Export…</button>
               </div>
@@ -156,25 +159,11 @@
 
         <!-- ============ Coming-soon views ============ -->
         <section class="view" id="view-batch" data-view="batch" aria-labelledby="batch-title" hidden>
-          <div class="page-head"><h1 class="page-title" id="batch-title">Batch Processing</h1><p class="page-sub">Convert and export multiple documents at once.</p></div>
-          <div class="coming">
-            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg>
-            <span class="chip chip-info">Coming in Phase 5</span>
-            <h2>Batch queue is not available yet</h2>
-            <p>A queue with progress, retries, pause and bulk export is planned for Phase 5. Until then, add files on the Convert page.</p>
-            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
-          </div>
+          <div id="batch-root"></div>
         </section>
 
         <section class="view" id="view-projects" data-view="projects" aria-labelledby="projects-title" hidden>
-          <div class="page-head"><h1 class="page-title" id="projects-title">Saved Projects</h1><p class="page-sub">Your locally saved workspaces. Files and edits stay on this device.</p></div>
-          <div class="coming">
-            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-folder"/></svg>
-            <span class="chip chip-info">Coming in Phase 5</span>
-            <h2>Saving projects is not available yet</h2>
-            <p>Optional on-device projects (stored only in this browser, with explicit delete controls) are planned for Phase 5. Nothing is saved at the moment.</p>
-            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
-          </div>
+          <div id="projects-root"></div>
         </section>
 
         <section class="view" id="view-settings" data-view="settings" aria-labelledby="settings-title" hidden>

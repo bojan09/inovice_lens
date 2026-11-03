@@ -231,3 +231,60 @@ test('workspace: removing the file drops its document and disposes its page sour
   assert.equal(ws.get('f1'), null);
   assert.equal(disposed, 1);
 });
+
+// ------------------------------------------------------------------ restoring a saved document (project resume)
+test('restoreDocument: a saved document round-trips through JSON and keeps edits, refs, page order and rotation', () => {
+  let { doc, result } = mk();
+  doc = M.setField(doc, 'supplier', 'Saved Ltd');
+  doc = M.setCell(doc, 'items', doc.items[0].id, 'qty', '9');
+  doc = M.rotatePage(doc, 0, 90);
+  const back = M.restoreDocument(JSON.parse(JSON.stringify(M.toPlain(doc))), result, { fileId: 'f77', name: 'x.png' });
+  assert.equal(back.fileId, 'f77', 'bound to the NEW file id');
+  assert.equal(back.fields.supplier.value, 'Saved Ltd');
+  assert.equal(back.fields.supplier.extracted, 'ACME Supplies', 'extracted draft preserved');
+  assert.equal(back.items[0].cells.qty.value, '9');
+  assert.equal(back.pages[0].rotation, 90);
+  assert.deepEqual(back.fields.number.ref, doc.fields.number.ref);
+  assert.deepEqual(validateDocument(back, { result }).map((i) => i.code), validateDocument(doc, { result }).map((i) => i.code));
+});
+
+test('restoreDocument: damaged, foreign or mismatching documents are refused (null), never half-loaded', () => {
+  const { doc, result } = mk();
+  const plain = () => JSON.parse(JSON.stringify(M.toPlain(doc)));
+  const opt = { fileId: 'f1', name: 'n' };
+  const breakers = [
+    (p) => { p.schema = 'other'; }, (p) => { p.version = 99; }, (p) => { p.docType = 'passport'; },
+    (p) => { delete p.fields.total; }, (p) => { p.fields.total.value = 5; }, (p) => { p.items[0].cells.qty = null; },
+    (p) => { p.items.push({ id: p.items[0].id, cells: p.items[0].cells }); }, (p) => { p.items[0].id = '../x'; },
+    (p) => { p.grid.columns = 'x'; }, (p) => { p.text = {}; }, (p) => { p.pages = []; },
+    (p) => { p.pages[0].source = 7; }, (p) => { p.pages[0].rotation = 45; },
+  ];
+  for (const [i, f] of breakers.entries()) { const p = plain(); f(p); assert.equal(M.restoreDocument(p, result, opt), null, `breaker ${i}`); }
+  assert.equal(M.restoreDocument(null, result, opt), null);
+  assert.equal(M.restoreDocument('x', result, opt), null);
+  // a ref that points outside the raw items is dropped, not trusted
+  const p = plain(); p.fields.number.ref = { page: 0, items: [99999] };
+  assert.equal(M.restoreDocument(p, result, opt).fields.number.ref, null);
+});
+
+test('workspace.restoreDoc: restored edits count as modified against the fresh draft, are not an undo step, and bad data keeps the draft', () => {
+  const result = resultOf(invoiceItems());
+  const fk = fakes(result);
+  const ws = createWorkspace(fk);
+  const e = ws.ensure('f1');
+  let edited = M.setField(e.doc, 'supplier', 'Restored Ltd');
+  const plain = JSON.parse(JSON.stringify(M.toPlain(edited)));
+  const fresh = fakes(result); // a new session = a reopened project
+  const ws2 = createWorkspace(fresh);
+  assert.equal(ws2.restoreDoc('f1', plain), true);
+  const e2 = ws2.get('f1');
+  assert.equal(e2.doc.fields.supplier.value, 'Restored Ltd');
+  assert.equal(e2.modified, true);
+  assert.equal(e2.history.canUndo, false, 'resume does not create an undo step');
+  e2.commit((d) => M.setField(d, 'supplier', 'Again'));
+  assert.equal(e2.undo(), true);
+  assert.equal(e2.doc.fields.supplier.value, 'Restored Ltd');
+  const ws3 = createWorkspace(fakes(result));
+  assert.equal(ws3.restoreDoc('f1', { schema: 'junk' }), false);
+  assert.equal(ws3.get('f1').doc.fields.supplier.value, 'ACME Supplies', 'fresh extraction kept');
+});

@@ -41,7 +41,7 @@ export function createStore({
   }
 
   /** Serialised so concurrent drops cannot race the limit/duplicate checks. */
-  function add(fileList) {
+  function add(fileList, { restoring = false } = {}) {
     const files = Array.from(fileList ?? []);
     const run = async () => {
       if (!files.length) return { added: 0, rejected: 0 };
@@ -56,6 +56,7 @@ export function createStore({
           isImage: KINDS[a.kind].image,
           url: KINDS[a.kind].image ? createObjectURL(a.file) : null,
           previewFailed: false,
+          restoring, // true while a saved project is being re-opened: the caller restores the result instead of re-running OCR
         }));
         const rej = res.rejected.map((r) => ({ id: `r${nextId++}`, ...r, retryable: isRetryable(r.code) }));
         items = [...items, ...created];

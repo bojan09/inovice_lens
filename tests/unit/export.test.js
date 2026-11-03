@@ -301,3 +301,77 @@ test('XLSX limits Excel enforces: sheet names are legal and over-long cells are 
     assert.equal(Number(n), EXCEL_CELL_LIMIT);
   }
 });
+
+// ------------------------------------------------------------------ Phase 5: combined / consolidated exports
+import { exportCombined, combineReason } from '../../js/export/index.js';
+import { consolidatedTables } from '../../js/export/consolidated.js';
+
+function twoDocs() {
+  const mkDoc = (name, supplier, qtyTotal, cur = 'EUR') => {
+    const items = layout([
+      { y: 90, x: 90, text: supplier, h: 54 }, { y: 190, x: 820, text: 'Invoice No: INV-' + name.slice(0, 2) }, { y: 240, x: 820, text: 'Date: 03 Nov 2026' },
+      { y: 574, x: 100, text: 'Description' }, { y: 574, x: 640, text: 'Qty' }, { y: 574, x: 780, text: 'Unit Price' }, { y: 574, x: 1000, text: 'Total' },
+      { y: 650, x: 100, text: 'Widget' }, { y: 650, x: 660, text: '1' }, { y: 650, x: 800, text: qtyTotal }, { y: 650, x: 1010, text: qtyTotal },
+      { y: 840, x: 780, text: `Subtotal ${qtyTotal}`, h: 34 }, { y: 895, x: 780, text: 'Tax (0%) 0.00', h: 34 }, { y: 960, x: 780, text: `Total ${cur} ${qtyTotal}`, h: 40 },
+    ]);
+    const result = resultOf(items);
+    const doc = M.createDocument({ fileId: name, name, result, docType: 'invoice', extraction: extractDocument({ result, docType: 'invoice' }) });
+    return { doc, result };
+  };
+  return [mkDoc('first.png', 'Alpha Ltd', '100.00'), mkDoc('second.png', 'Beta GmbH', '250.50', 'USD')];
+}
+
+test('consolidated tables: one row per document, every line item carries its source file, nothing is summed across currencies', () => {
+  const t = consolidatedTables(twoDocs());
+  assert.deepEqual(t.documents[0].slice(0, 4), ['Source file', 'Type', 'Supplier', 'Number']);
+  assert.deepEqual(t.documents.slice(1).map((r) => [r[0], r[2], r[6], r[9]]), [['first.png', 'Alpha Ltd', 'EUR', 100], ['second.png', 'Beta GmbH', 'USD', 250.5]]);
+  assert.deepEqual(t.lines.slice(1).map((r) => [r[0], r[2], r[5]]), [['first.png', 'Widget', 100], ['second.png', 'Widget', 250.5]]);
+  assert.equal(t.documents.length, 3, 'no totals row was invented');
+});
+
+test('consolidated XLSX: openpyxl reads numeric cells with the source file on every row; a currency warning is raised', { skip: !HAVE.openpyxl }, async () => {
+  const r = await exportCombined({ format: 'xlsx', entries: twoDocs(), now: new Date('2026-11-03T00:00:00Z') });
+  assert.equal(r.filename, 'invoicelens-consolidated_2026-11-03.xlsx');
+  assert.match(r.warnings[0], /2 currencies \(EUR, USD\).*NOT converted or added together/);
+  const f = join(tmp(), 'c.xlsx'); writeFileSync(f, await bytesOf(r));
+  const o = JSON.parse(py(`
+import openpyxl,sys,json
+wb=openpyxl.load_workbook(sys.argv[1]); d=wb['Documents']; l=wb['Line items']
+print(json.dumps({'sheets':wb.sheetnames,'docs':[[c.value for c in r] for r in d.iter_rows(min_row=2)],'types':[c.data_type for c in list(d.iter_rows(min_row=2))[0]],'lines':[[c.value for c in r] for r in l.iter_rows(min_row=2)]},default=str))`, f).stdout);
+  assert.deepEqual(o.sheets.slice(0, 2), ['Documents', 'Line items']);
+  assert.deepEqual(o.docs.map((r) => [r[0], r[2], r[6], r[9]]), [['first.png', 'Alpha Ltd', 'EUR', 100], ['second.png', 'Beta GmbH', 'USD', 250.5]]);
+  assert.equal(o.types[9], 'n');
+  assert.deepEqual(o.lines.map((r) => [r[0], r[5]]), [['first.png', 100], ['second.png', 250.5]]);
+});
+
+test('consolidated CSV: source file column, exact text, BOM', async () => {
+  const r = await exportCombined({ format: 'csv', entries: twoDocs(), csvTable: 'items', now: new Date('2026-11-03T00:00:00Z') });
+  assert.equal(r.filename, 'invoicelens-consolidated_items_2026-11-03.csv');
+  assert.match(r.text, /^﻿Source file,#,Description,Qty,Unit price,Total\r\nfirst\.png,1,Widget,1,100,100\r\n/);
+});
+
+test('combined PDF: page count is the sum, pages are labelled with their source, order is kept (poppler)', { skip: !HAVE.poppler }, async () => {
+  const [a, b] = twoDocs();
+  const ra = await exportOne({ entry: a, format: 'pdf', mode: 'structured' });
+  const rb = await exportOne({ entry: b, format: 'pdf', mode: 'structured' });
+  const r = await exportCombined({ format: 'pdf', entries: [a, b], results: [ra, rb], now: new Date('2026-11-03T00:00:00Z') });
+  assert.equal(r.filename, 'invoicelens-combined_2026-11-03.pdf');
+  const f = join(tmp(), 'c.pdf'); writeFileSync(f, await bytesOf(r));
+  const info = pdfinfoOf(f);
+  assert.equal(Number(/Pages:\s+(\d+)/.exec(info)[1]), r.pageCount);
+  assert.equal(r.pageCount, ra.pageCount + rb.pageCount);
+  const text = spawnSync('pdftotext', ['-layout', f, '-'], { encoding: 'utf8' }).stdout;
+  assert.ok(text.indexOf('Alpha Ltd') < text.indexOf('Beta GmbH'), 'order kept');
+  assert.match(text, /first\.png · page 1 of \d/);
+  assert.match(text, /second\.png · page 1 of \d/);
+  const unlabeled = await exportCombined({ format: 'pdf', entries: [a, b], results: [ra, rb], labelPages: false });
+  const f2 = join(tmp(), 'd.pdf'); writeFileSync(f2, await bytesOf(unlabeled));
+  assert.ok(!/page 1 of/.test(spawnSync('pdftotext', [f2, '-'], { encoding: 'utf8' }).stdout));
+});
+const pdfinfoOf = (f) => spawnSync('pdfinfo', [f], { encoding: 'utf8' }).stdout;
+
+test('combining Word is refused with a reason', async () => {
+  assert.match(combineReason('docx'), /one per document/);
+  assert.equal(combineReason('pdf'), null);
+  await assert.rejects(exportCombined({ format: 'docx', entries: twoDocs() }), /one per document/);
+});

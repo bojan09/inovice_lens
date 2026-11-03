@@ -307,3 +307,60 @@ test('good coverage and confidence: no enhanced attempt', async () => {
   assert.deepEqual(calls, []);
   assert.deepEqual(r.review, []);
 });
+
+// ------------------------------------------------------------------ Phase 5: pause / resume / retry-all / restore / counts
+const item = (id) => ({ id, file: file(), kind: 'pdf', name: `${id}.pdf` });
+function gated() {
+  const gates = new Map();
+  const started = [];
+  const runner = (it) => new Promise((resolve, reject) => { started.push(it.id); gates.set(it.id, { resolve: () => resolve({ review: [], pages: [], summary: {}, classification: {} }), reject }); });
+  return { runner, gates, started };
+}
+
+test('session pause: the running file finishes, nothing new starts; resume continues in order', async () => {
+  const g = gated();
+  const s = createRecognitionSession({ runner: g.runner, concurrency: 1 });
+  ['a', 'b', 'c'].forEach((id) => s.enqueue(item(id)));
+  await tick();
+  assert.deepEqual(g.started, ['a']);
+  s.pause();
+  assert.equal(s.paused, true);
+  g.gates.get('a').resolve();
+  await tick(); await tick();
+  assert.equal(s.get('a').status, 'recognized', 'the file already running completed');
+  assert.deepEqual(g.started, ['a'], 'paused: b did not start');
+  assert.equal(s.get('b').status, 'queued');
+  s.resume();
+  await tick();
+  assert.deepEqual(g.started, ['a', 'b']);
+  g.gates.get('b').resolve(); await tick(); await tick();
+  g.gates.get('c').resolve(); await tick(); await tick();
+  assert.deepEqual(s.counts(), { total: 3, queued: 0, active: 0, recognized: 3, review: 0, failed: 0, cancelled: 0 });
+});
+
+test('session: a failing file does not block the others; retryFailed re-queues only failed/cancelled', async () => {
+  const g = gated();
+  const s = createRecognitionSession({ runner: g.runner, concurrency: 1 });
+  ['a', 'b', 'c'].forEach((id) => s.enqueue(item(id)));
+  await tick();
+  g.gates.get('a').reject(Object.assign(new Error('boom'), { code: 'x' })); await tick(); await tick();
+  assert.equal(s.get('a').status, 'failed');
+  assert.deepEqual(g.started, ['a', 'b'], 'b started right after a failed');
+  g.gates.get('b').resolve(); await tick(); await tick();
+  s.cancel('c'); await tick();
+  assert.deepEqual(s.counts(), { total: 3, queued: 0, active: 0, recognized: 1, review: 0, failed: 1, cancelled: 1 });
+  assert.equal(s.retryFailed(), 2);
+  await tick();
+  assert.equal(s.counts().queued + s.counts().active, 2);
+});
+
+test('session restore: a saved result is injected without running the runner', () => {
+  let ran = 0;
+  const s = createRecognitionSession({ runner: async () => { ran += 1; } });
+  assert.equal(s.restore(item('a'), { status: 'review', result: { pages: [] }, rotation: 90, override: 'receipt' }), true);
+  assert.equal(ran, 0);
+  assert.deepEqual([s.get('a').status, s.get('a').rotation, s.get('a').override], ['review', 90, 'receipt']);
+  assert.equal(s.restore(item('a'), {}), false, 'no overwrite');
+  assert.throws(() => s.restore(item('b'), { status: 'extracting' }), /Cannot restore/);
+  assert.equal(s.retry('a'), true, 'a restored file can be re-recognized');
+});

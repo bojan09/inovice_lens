@@ -17,7 +17,7 @@ import { STATUS } from '../../recognition/states.js';
 const TABS = [['fields', 'Extracted Data'], ['table', 'Table'], ['text', 'Text']];
 const PANES = [['original', 'Original'], ['edit', 'Edit'], ['preview', 'Preview']];
 
-export function createEditor({ root, workspace, session, store, engines, toaster, srLive, onExport = () => {} }) {
+export function createEditor({ root, workspace, session, store, engines, toaster, srLive, onExport = () => {}, saveInfo = () => null }) {
   let current = null; // { id, entry, pos }
   let tab = 'fields';
   let pane = 'original';
@@ -177,6 +177,15 @@ export function createEditor({ root, workspace, session, store, engines, toaster
   });
 
   // ------------------------------------------------------------------ rendering
+  function saveLine(mod) {
+    const si = saveInfo();
+    if (si?.project) {
+      if (si.state === 'error') return `Not saved: ${si.error}`;
+      if (si.state === 'saving' || (mod && si.state !== 'saved')) return `Saving to project “${si.project.name}”…`;
+      return mod ? `Edited. Saved in project “${si.project.name}”` : `No changes yet. Autosaving to “${si.project.name}”`;
+    }
+    return mod ? 'Edited. Kept for this session only, not saved to disk' : 'No changes yet';
+  }
   function pageSourceOf(e) {
     e.pageSource ??= createPageSource({ item: e.item, result: e.result, engines });
     return e.pageSource;
@@ -193,8 +202,9 @@ export function createEditor({ root, workspace, session, store, engines, toaster
     title.textContent = doc.name;
     title.title = doc.name;
     const mod = e.modified;
-    saveState.dataset.state = mod ? 'dirty' : 'clean';
-    saveText.textContent = mod ? 'Edited. Kept for this session only, not saved to disk' : 'No changes yet';
+    const si0 = saveInfo();
+    saveState.dataset.state = si0?.state === 'error' || (mod && !(si0?.project && si0.state === 'saved')) ? 'dirty' : 'clean';
+    saveText.textContent = saveLine(mod);
     undoBtn.disabled = !e.history.canUndo;
     redoBtn.disabled = !e.history.canRedo;
     stale.hidden = !e.pendingResult;
@@ -259,5 +269,5 @@ export function createEditor({ root, workspace, session, store, engines, toaster
   setTab('fields');
   setPane('original');
 
-  return { open, close, get id() { return current?.id ?? null; } };
+  return { open, close, refreshSave() { if (current?.entry) { const mod = current.entry.modified; saveText.textContent = saveLine(mod); const si1 = saveInfo(); saveState.dataset.state = si1?.state === 'error' || (mod && !(si1?.project && si1.state === 'saved')) ? 'dirty' : 'clean'; } }, get id() { return current?.id ?? null; } };
 }

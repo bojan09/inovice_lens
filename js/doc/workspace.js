@@ -11,7 +11,7 @@
 //    undoable step; page text and page order are kept.
 
 import { extractDocument } from './extract.js';
-import { createDocument, retype, deepFreeze } from './model.js';
+import { createDocument, retype, deepFreeze, restoreDocument } from './model.js';
 import { createHistory } from './history.js';
 import { STATUS } from '../recognition/states.js';
 
@@ -77,6 +77,21 @@ export function createWorkspace({ store, session, now } = {}) {
     return e;
   }
 
+  /**
+   * Put a saved corrected document back (project resume). The untouched draft stays the baseline, so "modified" and the
+   * unsaved indicator are measured against the fresh extraction. Returns false when the saved document does not fit the
+   * recognition result (the fresh extraction is kept and the caller can tell the user).
+   */
+  function restoreDoc(id, plain) {
+    const e = ensure(id);
+    if (!e) return false;
+    const restored = restoreDocument(plain, e.result, { fileId: id, name: e.item.name });
+    if (!restored) return false;
+    e.history = createHistory(e.history.base, { now, start: restored });
+    emit(id);
+    return true;
+  }
+
   function drop(id) {
     const e = entries.get(id);
     if (!e) return;
@@ -120,6 +135,7 @@ export function createWorkspace({ store, session, now } = {}) {
 
   return {
     ensure,
+    restoreDoc,
     get: (id) => entries.get(id) ?? null,
     has: (id) => entries.has(id),
     hasUnsavedEdits: () => [...entries.values()].some((e) => e.modified),

@@ -167,3 +167,60 @@ export function countEdits(doc) {
   for (const t of Object.values(doc.text)) if (t.value !== t.extracted) n += 1;
   return n;
 }
+
+/**
+ * Re-validate a plain document read back from storage / a project file (untrusted) against the recognition result it
+ * belongs to. Returns a fresh, safe document bound to `fileId`, or null when it does not fit (the caller then falls back
+ * to a new extraction instead of showing corrupt data).
+ */
+export function restoreDocument(plain, result, { fileId, name }) {
+  try {
+    if (!plain || plain.schema !== SCHEMA || !Number.isInteger(plain.version) || plain.version > VERSION) return null;
+    if (!DOC_TYPES.includes(plain.docType)) return null;
+    const isField = (f) => f && typeof f === 'object' && typeof f.value === 'string' && typeof f.extracted === 'string';
+    const fields = {};
+    for (const k of FIELD_KEYS) { if (!isField(plain.fields?.[k])) return null; const f = plain.fields[k]; fields[k] = { value: f.value, extracted: f.extracted, ref: validRef(f.ref, result), note: typeof f.note === 'string' ? f.note : null, noteLevel: f.noteLevel === 'warning' || f.noteLevel === 'info' ? f.noteLevel : null }; }
+    const cell = (f) => (isField(f) ? { value: f.value, extracted: f.extracted, ref: validRef(f.ref, result), note: typeof f.note === 'string' ? f.note : null, noteLevel: f.noteLevel === 'warning' || f.noteLevel === 'info' ? f.noteLevel : null } : null);
+    const ids = new Set();
+    const rowId = (id) => typeof id === 'string' && /^[rg]\d+$/.test(id) && !ids.has(id) && ids.add(id);
+    if (!Array.isArray(plain.items) || !Array.isArray(plain.grid?.rows)) return null;
+    const items = [];
+    for (const r of plain.items) {
+      if (!rowId(r?.id)) return null;
+      const cells = {};
+      for (const c of ROW_COLUMNS) { const v = cell(r.cells?.[c]); if (!v) return null; cells[c] = v; }
+      items.push({ id: r.id, cells });
+    }
+    const columns = plain.grid.columns;
+    if (!Number.isInteger(columns) || columns < 0 || columns > 64) return null;
+    const grows = [];
+    for (const r of plain.grid.rows) {
+      if (!rowId(r?.id) || !Array.isArray(r.cells) || r.cells.length !== columns) return null;
+      const cells = r.cells.map(cell);
+      if (cells.some((c) => !c)) return null;
+      grows.push({ id: r.id, cells });
+    }
+    const src = result.pages.map((p) => p.index);
+    const text = {};
+    for (const i of src) { const t = plain.text?.[i]; if (!t || typeof t.value !== 'string' || typeof t.extracted !== 'string') return null; text[i] = { value: t.value, extracted: t.extracted }; }
+    if (!Array.isArray(plain.pages) || plain.pages.length !== src.length) return null;
+    const seen = new Set();
+    const pages = [];
+    for (const p of plain.pages) {
+      if (!src.includes(p?.source) || seen.has(p.source) || !Number.isInteger(p.rotation) || p.rotation % 90 || p.rotation < 0 || p.rotation > 270) return null;
+      seen.add(p.source);
+      pages.push({ source: p.source, rotation: p.rotation });
+    }
+    const detected = Array.isArray(plain.detectedCurrencies) ? plain.detectedCurrencies.filter((c) => typeof c === 'string' && /^[A-Z]{3}$/.test(c)) : [];
+    return { schema: SCHEMA, version: VERSION, fileId, name, sourceKind: result.kind, docType: plain.docType, typeOrigin: plain.typeOrigin === 'user' ? 'user' : 'suggested', fields, items, grid: { columns, rows: grows }, text, pages, detectedCurrencies: detected, nextId: Number.isInteger(plain.nextId) && plain.nextId > 0 ? plain.nextId : 1 };
+  } catch {
+    return null;
+  }
+}
+
+function validRef(ref, result) {
+  if (!ref || typeof ref !== 'object' || !Number.isInteger(ref.page) || !Array.isArray(ref.items)) return null;
+  const pg = result.pages.find((p) => p.index === ref.page);
+  if (!pg || !ref.items.every((i) => Number.isInteger(i) && i >= 0 && i < pg.raw.items.length)) return null;
+  return { page: ref.page, items: ref.items.slice() };
+}

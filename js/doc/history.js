@@ -2,9 +2,9 @@
 // a snapshot is just a reference, so this is cheap and cannot desynchronize from the document.
 // Consecutive edits with the same `key` inside `coalesceMs` (typing in one field) become ONE step.
 
-export function createHistory(initial, { limit = 200, coalesceMs = 1000, now = () => Date.now() } = {}) {
+export function createHistory(initial, { limit = 200, coalesceMs = 1000, now = () => Date.now(), start = initial } = {}) {
   let past = []; // earlier snapshots, oldest first
-  let present = initial;
+  let present = start; // != initial only when a saved document is restored (its edits are not an undo step)
   let future = [];
   let lastKey = null;
   let lastAt = 0;
