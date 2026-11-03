@@ -51,6 +51,11 @@ function extractCurrency(input) {
   return { text, currencies: found };
 }
 
+/** Currencies mentioned anywhere in free text (codes and symbols), e.g. ['EUR','USD']. "$" is reported as USD. */
+export function detectCurrencies(text) {
+  return [...extractCurrency(String(text ?? '')).currencies].sort();
+}
+
 function result(minor, currency, ambiguous, reason, extra) {
   return { minor, currency, ambiguous, reason, ...(extra || {}) };
 }

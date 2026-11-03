@@ -14,8 +14,10 @@ export function initNav({ onRoute } = {}) {
 
   function show(id) {
     views.forEach((v) => { v.hidden = v.dataset.view !== id; });
+    main.dataset.view = id;
+    const active = VIEWS[id].parent ?? id; // the editor lives under Convert in the navigation
     links.forEach((a) => {
-      if (a.dataset.nav === id) a.setAttribute('aria-current', 'page');
+      if (a.dataset.nav === active) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
     document.title = `${VIEWS[id].title} · InvoiceLens`;

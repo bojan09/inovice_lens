@@ -19,7 +19,7 @@ const STATUS_VIEW = {
 
 const pct = (f) => Math.max(0, Math.min(100, Math.round(f * 100)));
 
-export function createFileList({ store, session, panel, listEl, rejectEl, countEl, noMatchEl, cancelAllBtn }) {
+export function createFileList({ store, session, workspace = null, panel, listEl, rejectEl, countEl, noMatchEl, cancelAllBtn }) {
   const cards = new Map(); // id -> { node, update }
   const rejectedNodes = new Map();
   let query = '';
@@ -69,7 +69,9 @@ export function createFileList({ store, session, panel, listEl, rejectEl, countE
     retryBtn.addEventListener('click', () => session.retry(id));
     const removeBtn = el('button', { type: 'button', class: 'icon-btn', 'aria-label': `Remove ${item.name}`, title: 'Remove' }, icon('x'));
     removeBtn.addEventListener('click', () => store.remove(id));
-    const actions = el('div', { class: 'card-actions' }, rotateBtn, cancelBtn, retryBtn, removeBtn);
+    const editLink = el('a', { class: 'btn btn-primary btn-sm', href: `#/editor/${id}` }, icon('pencil', 'icon-sm'), 'Review & edit');
+    const editedChip = el('span', { class: 'chip chip-info', hidden: true, title: 'You have edits for this file. They are kept only while this tab stays open.' }, 'Edited');
+    const actions = el('div', { class: 'card-actions' }, editedChip, editLink, rotateBtn, cancelBtn, retryBtn, removeBtn);
 
     const node = el('li', { class: 'file-card', 'data-id': id }, thumb, info, actions);
 
@@ -148,6 +150,9 @@ export function createFileList({ store, session, panel, listEl, rejectEl, countE
       }
 
       // actions
+      editLink.hidden = !(done && res);
+      editLink.setAttribute('aria-label', `Review and edit ${it.name}`);
+      editedChip.hidden = !(done && res && workspace?.get(id)?.modified);
       const canRotate = !active && status !== STATUS.FAILED && (it.isImage || (res && (res.summary.ocrPages > 0 || res.summary.emptyPages > 0)));
       rotateBtn.hidden = !canRotate;
       rotateBtn.setAttribute('aria-label', `Rotate ${it.name} 90 degrees clockwise and recognize again${rec?.rotation ? ` (currently ${rec.rotation} degrees)` : ''}`);
@@ -246,6 +251,7 @@ export function createFileList({ store, session, panel, listEl, rejectEl, countE
 
   store.subscribe(render);
   session.subscribe((snap) => { recSnap = snap; render(); });
+  workspace?.subscribe(() => render()); // the "Edited" chip follows the editor
   render();
 
   return {

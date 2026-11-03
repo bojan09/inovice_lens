@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parsePref, resolveTheme, readPref, writePref, applyPref, THEME_KEY } from '../../js/theme.js';
 import { formatBytes, usageFraction } from '../../js/format.js';
-import { parseRoute } from '../../js/router.js';
+import { parseRoute, parseEditorId } from '../../js/router.js';
 
 function fakeStorage(initial = {}, { throws = false } = {}) {
   const m = new Map(Object.entries(initial));
@@ -92,4 +92,12 @@ test('parseRoute', () => {
   assert.equal(parseRoute('#/__proto__'), 'convert');
   assert.equal(parseRoute('#/constructor'), 'convert');
   assert.equal(parseRoute(undefined), 'convert');
+  assert.equal(parseRoute('#/editor/f12'), 'editor');
+  assert.equal(parseRoute('#/editor'), 'editor');
+});
+
+test('parseEditorId accepts only generated file ids', () => {
+  assert.equal(parseEditorId('#/editor/f12'), 'f12');
+  assert.equal(parseEditorId('#editor/f1/'), 'f1');
+  for (const bad of ['#/editor', '#/editor/', '#/editor/x1', '#/editor/f1/../f2', '#/editor/f1?x', '#/convert', '', undefined, '#/editor/__proto__']) assert.equal(parseEditorId(bad), null, String(bad));
 });

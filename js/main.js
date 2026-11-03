@@ -11,6 +11,9 @@ import { createRecognitionSession } from './recognition/session.js';
 import { createRealRunner } from './recognition/engines.js';
 import { STATUS, isTerminal } from './recognition/states.js';
 import { CATEGORY_LABELS } from './recognition/classify.js';
+import { createWorkspace } from './doc/workspace.js';
+import { createEditor } from './ui/editor/editor.js';
+import { parseEditorId } from './router.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -19,7 +22,8 @@ const toaster = createToaster($('toasts'));
 
 initThemeMenu({ button: $('theme-btn'), menu: $('theme-menu'), buttonIcon: $('theme-btn-icon') });
 
-const nav = initNav();
+let editor = null; // created below, once the workspace exists; routes can fire during initNav()
+const nav = initNav({ onRoute: (view) => { if (view === 'editor') editor?.open(parseEditorId(location.hash)); else editor?.close(); } });
 
 // Recognition: one document at a time (a single wasm OCR worker; bounded to keep phones responsive).
 const real = createRealRunner();
@@ -51,9 +55,15 @@ session.subscribe((snap) => {
   }
 });
 
+// Editable documents live for the whole page session, so edits survive moving between views.
+const workspace = createWorkspace({ store, session });
+editor = createEditor({ root: $('editor-root'), workspace, session, store, engines: real.engines, toaster, srLive: (m) => { $('sr-live').textContent = m; } });
+if (location.hash.startsWith('#/editor')) editor.open(parseEditorId(location.hash));
+
 const fileList = createFileList({
   store,
   session,
+  workspace,
   cancelAllBtn: $('cancel-all'),
   panel: $('files-panel'),
   listEl: $('file-list'),
@@ -92,8 +102,13 @@ $('search').addEventListener('input', (e) => {
   fileList.setQuery(e.target.value);
 });
 
+// Edits are not persisted until a later phase: warn before the tab is closed or reloaded with unsaved edits.
+window.addEventListener('beforeunload', (e) => {
+  if (workspace.hasUnsavedEdits()) { e.preventDefault(); e.returnValue = ''; }
+});
+
 // Release preview URLs when the page goes away.
-window.addEventListener('pagehide', () => { session.clear(); real.dispose(); store.destroy(); });
+window.addEventListener('pagehide', () => { workspace.dispose(); session.clear(); real.dispose(); store.destroy(); });
 
 const storageEls = { valueEl: $('storage-value'), meterEl: $('storage-meter'), fillEl: $('storage-fill') };
 updateStorageMeter(storageEls);

@@ -24,5 +24,5 @@ export function createRealRunner() {
     signal,
     onProgress,
   });
-  return { runner, dispose: () => ocr.dispose() };
+  return { runner, engines, dispose: () => ocr.dispose() };
 }
