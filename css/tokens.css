@@ -43,6 +43,12 @@
   --chip-neutral-bg: #e8edf4;  --chip-neutral-fg: #4b5568;   /* est  Queued, Table, Document */
   --banner-warning-bg: #fdf2df; /* est  "1 item to review" strip */
 
+  /* file-type tiles (decorative; the label text carries the meaning). Added in Phase 1. */
+  --ft-pdf: #d92d20;    /* est  reference PDF tile */
+  --ft-word: #2563eb;   /* est */
+  --ft-excel: #15803d;  /* est */
+  --ft-sheets: #16a34a; /* est */
+
   /* ---- Fonts ---- */
   /* Reference looks like Inter. Not bundled: stack uses Inter if installed/self-hosted,
      else OS UI fonts. English/Latin only (app is English-only). No CDN. */

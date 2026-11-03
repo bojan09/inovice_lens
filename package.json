@@ -5,10 +5,14 @@
   "type": "module",
   "description": "Browser-only invoice/receipt OCR to editable file converter",
   "scripts": {
+    "serve": "node scripts/serve.js",
     "test": "node --test \"tests/**/*.test.js\"",
+    "test:browser": "node --test --test-concurrency=1 --test-timeout=120000 \"tests/browser/*.e2e.js\"",
+    "test:all": "npm test && npm run test:browser",
     "eval": "node tests/eval/run.js"
   },
   "devDependencies": {
+    "axe-core": "^4.11.0",
     "fast-check": "^4.10.2"
   }
 }

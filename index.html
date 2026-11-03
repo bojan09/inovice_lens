@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="InvoiceLens turns invoices, receipts and documents into editable files. Everything stays on your device.">
+  <title>Convert · InvoiceLens</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/convert.css">
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar">
+      <a class="brand" href="#/convert" aria-label="InvoiceLens home">
+        <span class="brand-mark"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-scan"/></svg></span>
+        <span class="brand-name">InvoiceLens</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <ul>
+          <li><a class="nav-link" href="#/convert" data-nav="convert"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-home"/></svg><span>Convert</span></a></li>
+          <li><a class="nav-link" href="#/batch" data-nav="batch"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg><span>Batch Processing</span></a></li>
+          <li><a class="nav-link" href="#/projects" data-nav="projects"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-folder"/></svg><span>Saved Projects</span></a></li>
+          <li><a class="nav-link" href="#/settings" data-nav="settings"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-settings"/></svg><span>Settings</span></a></li>
+        </ul>
+      </nav>
+      <div class="storage" id="storage">
+        <p class="storage-label">Local Storage</p>
+        <p class="storage-value" id="storage-value">Checking…</p>
+        <div class="meter" id="storage-meter" role="progressbar" aria-label="Browser storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span id="storage-fill"></span></div>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <div class="main-col">
+      <header class="topbar">
+        <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-menu"/></svg>
+        </button>
+        <a class="topbar-brand" href="#/convert" aria-label="InvoiceLens home">
+          <span class="brand-mark"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-scan"/></svg></span>
+          <span class="brand-name">InvoiceLens</span>
+        </a>
+        <div class="search">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-search"/></svg>
+          <input type="search" id="search" name="search" placeholder="Search files…" aria-label="Search selected files by name" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="topbar-spacer"></div>
+        <div class="theme-wrap">
+          <button type="button" class="icon-btn" id="theme-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="theme-menu" aria-label="Theme: System. Change theme">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-monitor" id="theme-btn-icon"/></svg>
+          </button>
+          <div class="menu" id="theme-menu" role="menu" aria-label="Theme" hidden>
+            <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-theme-pref="light"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sun"/></svg><span>Light</span><svg class="icon menu-check" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button>
+            <button type="button" class="menu-item" role="menuitemradio" aria-checked="false" data-theme-pref="dark"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-moon"/></svg><span>Dark</span><svg class="icon menu-check" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button>
+            <button type="button" class="menu-item" role="menuitemradio" aria-checked="true" data-theme-pref="system"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-monitor"/></svg><span>System</span><svg class="icon menu-check" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></button>
+          </div>
+        </div>
+      </header>
+
+      <main id="main" class="main" tabindex="-1">
+        <!-- ============ Convert ============ -->
+        <section class="view" id="view-convert" data-view="convert" aria-labelledby="convert-title">
+          <div class="hero">
+            <h1 class="hero-title" id="convert-title">Turn documents into <span class="accent">editable files</span></h1>
+            <p class="hero-sub">Upload images or PDFs and let InvoiceLens extract the content automatically.<br>Review, edit and export to PDF, Word, Excel or Google Sheets.</p>
+
+            <div class="hero-stage">
+              <div class="dropzone" id="dropzone" role="group" aria-label="File drop area">
+                <svg class="icon dz-icon" aria-hidden="true" focusable="false"><use href="#i-upload-cloud"/></svg>
+                <p class="dz-title">Drag &amp; drop files here</p>
+                <p class="dz-or">or</p>
+                <button type="button" class="btn btn-primary" id="browse-btn" data-browse>Browse Files</button>
+                <p class="dz-hint">Supports JPG, PNG, WebP, PDF <span class="dot" aria-hidden="true">•</span> Multiple files allowed</p>
+              </div>
+              <div class="hero-art" aria-hidden="true">
+                <svg class="doc-art" viewBox="0 0 150 190" focusable="false">
+                  <g transform="rotate(-8 75 95)">
+                    <rect class="doc-sheet" x="22" y="14" width="102" height="140" rx="6"/>
+                    <text class="doc-title" x="32" y="42">INVOICE</text>
+                    <rect class="doc-line" x="32" y="56" width="60" height="4" rx="2"/>
+                    <rect class="doc-line" x="32" y="68" width="78" height="4" rx="2"/>
+                    <rect class="doc-line" x="32" y="80" width="46" height="4" rx="2"/>
+                    <rect class="doc-line" x="32" y="100" width="78" height="4" rx="2"/>
+                    <rect class="doc-line" x="32" y="112" width="78" height="4" rx="2"/>
+                    <rect class="doc-line accent-line" x="82" y="132" width="28" height="6" rx="3"/>
+                  </g>
+                  <path class="doc-arrow" d="M18 168c22 10 62 6 92-26" fill="none"/>
+                  <path class="doc-arrow" d="M100 136l14-4-4 14" fill="none"/>
+                </svg>
+                <ul class="format-chips" aria-label="Export formats, available in a later phase">
+                  <li><span class="ft ft-pdf">PDF</span>PDF</li>
+                  <li><span class="ft ft-word">W</span>Word</li>
+                  <li><span class="ft ft-excel">X</span>Excel</li>
+                  <li><span class="ft ft-sheets">S</span>Sheets</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mobile-only home (reference: "Upload a document") -->
+          <div class="mobile-home">
+            <svg class="icon mh-icon" aria-hidden="true" focusable="false"><use href="#i-upload-cloud"/></svg>
+            <h1 class="mh-title" id="convert-title-mobile">Upload a document</h1>
+            <p class="mh-sub">Photo, image or PDF</p>
+            <button type="button" class="btn btn-primary btn-block" data-browse>Browse Files</button>
+            <ul class="mh-tiles">
+              <li><button type="button" class="tile" id="camera-btn"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-camera"/></svg><span>Camera</span></button></li>
+              <li><button type="button" class="tile" id="gallery-btn"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-image"/></svg><span>Gallery</span></button></li>
+              <li><button type="button" class="tile" data-browse><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-file"/></svg><span>Files</span></button></li>
+            </ul>
+            <p class="mh-privacy"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lock"/></svg>Files stay on this device.</p>
+          </div>
+
+          <!-- Selected files -->
+          <section class="files-panel" id="files-panel" aria-labelledby="files-title" hidden>
+            <div class="panel-head">
+              <h2 class="panel-title" id="files-title">Selected files <span class="count" id="files-count"></span></h2>
+              <div class="panel-actions">
+                <button type="button" class="btn btn-secondary" id="add-more" data-browse>Add files</button>
+                <button type="button" class="btn btn-secondary" id="clear-all">Clear all</button>
+                <button type="button" class="btn btn-primary" id="convert-btn" disabled aria-describedby="convert-note">Convert — coming in Phase 2</button>
+              </div>
+            </div>
+            <p class="notice" id="convert-note"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-info"/></svg><span>Files are checked and previewed on this device only. Text recognition arrives in Phase 2 and export in Phase 4; nothing is converted yet.</span></p>
+            <ul class="reject-list" id="reject-list" aria-label="Files that were not accepted"></ul>
+            <ul class="file-list" id="file-list" aria-label="Accepted files"></ul>
+            <p class="no-match" id="no-match" hidden>No files match your search.</p>
+          </section>
+
+          <ul class="features" aria-label="Features">
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-sparkles"/></svg><h2>Automatic Recognition</h2><p>Detects and extracts content</p></li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-pencil"/></svg><h2>Edit &amp; Review</h2><p>Correct and adjust results</p></li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg><h2>Multiple Formats</h2><p>PDF, Word, Excel, Sheets</p></li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-lock"/></svg><h2>Keep It Local</h2><p>Works on your device</p></li>
+          </ul>
+          <p class="phase-note">Preview build: upload and checks work today; recognition, editing and export are coming in later phases.</p>
+        </section>
+
+        <!-- ============ Coming-soon views ============ -->
+        <section class="view" id="view-batch" data-view="batch" aria-labelledby="batch-title" hidden>
+          <div class="page-head"><h1 class="page-title" id="batch-title">Batch Processing</h1><p class="page-sub">Convert and export multiple documents at once.</p></div>
+          <div class="coming">
+            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg>
+            <span class="chip chip-info">Coming in Phase 5</span>
+            <h2>Batch queue is not available yet</h2>
+            <p>A queue with progress, retries, pause and bulk export is planned for Phase 5. Until then, add files on the Convert page.</p>
+            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
+          </div>
+        </section>
+
+        <section class="view" id="view-projects" data-view="projects" aria-labelledby="projects-title" hidden>
+          <div class="page-head"><h1 class="page-title" id="projects-title">Saved Projects</h1><p class="page-sub">Your locally saved workspaces. Files and edits stay on this device.</p></div>
+          <div class="coming">
+            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-folder"/></svg>
+            <span class="chip chip-info">Coming in Phase 5</span>
+            <h2>Saving projects is not available yet</h2>
+            <p>Optional on-device projects (stored only in this browser, with explicit delete controls) are planned for Phase 5. Nothing is saved at the moment.</p>
+            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
+          </div>
+        </section>
+
+        <section class="view" id="view-settings" data-view="settings" aria-labelledby="settings-title" hidden>
+          <div class="page-head"><h1 class="page-title" id="settings-title">Settings</h1><p class="page-sub">Customize InvoiceLens to fit your workflow.</p></div>
+          <div class="coming">
+            <svg class="icon coming-icon" aria-hidden="true" focusable="false"><use href="#i-settings"/></svg>
+            <span class="chip chip-info">Coming in Phase 6</span>
+            <h2>Settings are not available yet</h2>
+            <p>Recognition, export defaults and storage options arrive in Phase 6. You can already switch between light, dark and system appearance with the theme button in the top bar.</p>
+            <a class="btn btn-secondary" href="#/convert">Go to Convert</a>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav" aria-label="Primary mobile">
+        <a class="bn-link" href="#/convert" data-nav="convert"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-home"/></svg><span>Home</span></a>
+        <a class="bn-link" href="#/batch" data-nav="batch"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-batch"/></svg><span>Batch</span></a>
+        <a class="bn-link" href="#/projects" data-nav="projects"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-folder"/></svg><span>Projects</span></a>
+        <a class="bn-link" href="#/settings" data-nav="settings"><svg class="icon" aria-hidden="true" focusable="false"><use href="#i-settings"/></svg><span>Settings</span></a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- hidden file inputs (keyboard access goes through the visible buttons) -->
+  <input type="file" id="file-input" class="visually-hidden" tabindex="-1" multiple accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf" aria-hidden="true">
+  <input type="file" id="gallery-input" class="visually-hidden" tabindex="-1" multiple accept="image/jpeg,image/png,image/webp" aria-hidden="true">
+  <input type="file" id="camera-input" class="visually-hidden" tabindex="-1" accept="image/*" capture="environment" aria-hidden="true">
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></symbol>
+    <symbol id="i-batch" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 12h16M4 6h16M4 18h16"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-upload-cloud" viewBox="0 0 24 24"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4M22 5h-4M4 17v2M5 18H3"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+  </svg>
+</body>
+</html>
