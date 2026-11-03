@@ -9,6 +9,7 @@ after(async () => { await app.close(); });
 async function open(opts) {
   const ctx = await app.newPage(opts);
   await ctx.page.goto(app.base);
+  await ctx.page.waitForFunction(() => document.getElementById('storage-value')?.textContent !== 'Checking…'); // main.js has run
   return ctx;
 }
 /** Emulate an OS colour-scheme change and wait until the page has actually restyled. */
@@ -151,12 +152,12 @@ test('intake: real JPG, PNG, WebP and PDF are accepted, previewed and removable'
   assert.deepEqual(decoded, [480, 480, 480]);
   assert.equal(await page.locator('.file-card:has(.thumb-pdf) img').count(), 0);
   const meta = await page.locator('.file-card').nth(1).locator('.file-meta').innerText();
-  assert.match(meta, /PNG.*KB.*480 × 640 px.*Checked/s);
+  assert.match(meta, /PNG.*KB.*480 × 640 px/s);
 
   // honest state: Convert is disabled and labelled, no success/converted claims
   assert.equal(await page.locator('#convert-btn').isDisabled(), true);
-  assert.match(await page.locator('#convert-btn').innerText(), /coming in Phase 2/i);
-  assert.doesNotMatch(await page.locator('#files-panel').innerText(), /converted successfully|completed|extracted \d/i);
+  assert.match(await page.locator('#convert-btn').innerText(), /Export — coming in Phase 4/i);
+  assert.doesNotMatch(await page.locator('#files-panel').innerText(), /converted successfully|exported|completed/i);
 
   // remove one
   await page.click('button[aria-label="Remove sample.png"]');
@@ -407,7 +408,7 @@ test('touch targets on mobile are at least 44px', async () => {
   await page.setInputFiles('#file-input', [fixture('sample.png')]);
   await page.waitForSelector('.file-card');
   const selectors = ['.mobile-home [data-browse]', '#camera-btn', '#gallery-btn', '.mobile-home .tile >> nth=2',
-    '.bn-link >> nth=0', '.bn-link >> nth=3', '#theme-btn', '#add-more', '#clear-all', '.file-card .icon-btn'];
+    '.bn-link >> nth=0', '.bn-link >> nth=3', '#theme-btn', '#add-more', '#clear-all', '.file-card button[aria-label^="Remove"]'];
   for (const sel of selectors) {
     const box = await page.locator(sel).first().boundingBox();
     assert.ok(box.width >= 44 && box.height >= 44, `${sel} is ${box.width}x${box.height}`);

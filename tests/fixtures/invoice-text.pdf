@@ -1,0 +1,44 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Length 367 >>
+stream
+BT /F1 14 Tf 18 TL 50 780 Td (ACME Supplies) Tj T* (INVOICE) Tj T* (Invoice No: INV-00482) Tj T* (Date: 03 Nov 2026) Tj T* (Due Date: 17 Nov 2026) Tj T* (Bill to: Bright Tech Ltd) Tj T* (Description Qty Unit Price Total) Tj T* (Product A 2 80.00 160.00) Tj T* (Product B 1 85.00 85.00) Tj T* (Subtotal 245.00) Tj T* (Tax \(0%\) 0.00) Tj T* (Total EUR 245.00) Tj T* ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+6 0 obj
+<< /Length 160 >>
+stream
+BT /F1 14 Tf 18 TL 50 780 Td (Page two) Tj T* (Payment terms: 14 days.) Tj T* (Thank you for your business.) Tj T* (Supplier bank: SYNTHETIC-IBAN-0000) Tj T* ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 6 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000197 00000 n 
+0000000615 00000 n 
+0000000741 00000 n 
+0000000952 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+1078
+%%EOF

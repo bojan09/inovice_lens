@@ -7,6 +7,10 @@ import { createToaster } from './ui/toast.js';
 import { createFileList } from './ui/fileList.js';
 import { initIntake } from './ui/intakeUi.js';
 import { updateStorageMeter } from './ui/storageMeter.js';
+import { createRecognitionSession } from './recognition/session.js';
+import { createRealRunner } from './recognition/engines.js';
+import { STATUS, isTerminal } from './recognition/states.js';
+import { CATEGORY_LABELS } from './recognition/classify.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -17,8 +21,40 @@ initThemeMenu({ button: $('theme-btn'), menu: $('theme-menu'), buttonIcon: $('th
 
 const nav = initNav();
 
+// Recognition: one document at a time (a single wasm OCR worker; bounded to keep phones responsive).
+const real = createRealRunner();
+const session = createRecognitionSession({ runner: real.runner, concurrency: 1 });
+
+// new files are queued automatically; removed files are cancelled and forgotten
+const known = new Set();
+store.subscribe(({ items }) => {
+  const ids = new Set(items.map((i) => i.id));
+  for (const id of known) if (!ids.has(id)) { known.delete(id); session.remove(id); }
+  for (const it of items) if (!known.has(it.id)) { known.add(it.id); session.enqueue(it); }
+});
+
+// screen-reader announcements for finished files (visual state lives on the cards)
+const lastStatus = new Map();
+session.subscribe((snap) => {
+  for (const [id, e] of snap) {
+    const prev = lastStatus.get(id);
+    lastStatus.set(id, e.status);
+    if (prev === e.status || !isTerminal(e.status)) continue;
+    const name = store.getState().items.find((i) => i.id === id)?.name ?? 'File';
+    const msg = {
+      [STATUS.RECOGNIZED]: `${name}: recognized${e.result ? `, suggested type ${CATEGORY_LABELS[e.result.classification.suggested]}` : ''}.`,
+      [STATUS.REVIEW]: `${name}: needs review. ${e.result?.review?.[0] ?? ''}`,
+      [STATUS.FAILED]: `${name}: failed. ${e.error?.message ?? ''}`,
+      [STATUS.CANCELLED]: `${name}: cancelled.`,
+    }[e.status];
+    if (msg) $('sr-live').textContent = msg;
+  }
+});
+
 const fileList = createFileList({
   store,
+  session,
+  cancelAllBtn: $('cancel-all'),
   panel: $('files-panel'),
   listEl: $('file-list'),
   rejectEl: $('reject-list'),
@@ -39,6 +75,8 @@ initIntake({
   goToConvert: () => { if (location.hash && !/^#\/?convert/.test(location.hash)) nav.go('convert'); },
 });
 
+$('cancel-all').addEventListener('click', () => session.cancelAll());
+
 $('clear-all').addEventListener('click', () => {
   const n = store.getState().items.length + store.getState().rejected.length;
   store.clear();
@@ -55,7 +93,7 @@ $('search').addEventListener('input', (e) => {
 });
 
 // Release preview URLs when the page goes away.
-window.addEventListener('pagehide', () => store.destroy());
+window.addEventListener('pagehide', () => { session.clear(); real.dispose(); store.destroy(); });
 
 const storageEls = { valueEl: $('storage-value'), meterEl: $('storage-meter'), fillEl: $('storage-fill') };
 updateStorageMeter(storageEls);

@@ -314,3 +314,11 @@ hashed or versioned URLs; wait for `navigator.storage.persist()` to be requested
   size of docx, repo app-code size, `write-excel-file` UMD version match, the 15-day-old docx 9.13.0 stability.
 - Advisories: npm bulk advisory API reports only `xlsx` (0.18.5) among all checked packages; GitHub
   advisory pages for non-npm routes (SheetJS CDN builds) were not checked individually.
+
+## 7. Phase 2 runtime verification (2026-11-03)
+
+Vendored by `scripts/vendor.js` into `vendor/` (see `vendor/VENDOR.md` for per-file sha256). Verified in Chromium (Playwright 1.63):
+- tesseract.js 7.0.0 works with `workerBlobURL:false`, full-URL `corePath` (`tesseract-core-simd-lstm.wasm.js`), local `langPath` and `gzip:true`; `.gz` must be served without `Content-Encoding`. `cacheMethod:'none'` was set (IndexedDB use not separately inspected). Output via `{blocks:true}` yields blocks -> paragraphs -> lines -> words with `bbox` and `confidence`.
+- CSP that works: `script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self'; img-src 'self' blob: data:` with no console/CSP errors.
+- pdf.js 6.4.299: `getDocument({data, wasmUrl, standardFontDataUrl, iccUrl, enableScripting:false})` works for text extraction and page rendering; module worker from same origin. Password-protected and damaged PDFs raise `PasswordException` / `InvalidPDFException`. pdf.js logs a benign "Indexing all PDF objects" warning when recovering a broken PDF.
+- NOT exercised: JPEG2000/JBIG2 wasm, ICC and standard-font fetching (no fixture needs them), service-worker interception of these fetches (no SW yet).

@@ -6,7 +6,7 @@ import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const PUBLIC = new Set(['index.html', 'css', 'js', 'assets']); // never serve tests/, docs/, node_modules/ or .git/
+const PUBLIC = new Set(['index.html', 'css', 'js', 'assets', 'vendor']); // never serve tests/, docs/, node_modules/ or .git/
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -19,6 +19,9 @@ const TYPES = {
   '.webp': 'image/webp',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
+  '.wasm': 'application/wasm',
+  '.gz': 'application/gzip', // served as-is (no Content-Encoding): tesseract.js inflates eng.traineddata.gz itself
+  '.icc': 'application/octet-stream',
 };
 
 export function createStaticServer() {
