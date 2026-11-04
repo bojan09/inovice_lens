@@ -14,18 +14,22 @@ import { parseAmount, detectCurrencies } from '../money.js';
 import { findDate } from './dates.js';
 import { emptyField, makeField, ROW_COLUMNS } from './model.js';
 
-const TITLE_WORDS = /^(?:tax\s+)?(?:invoice|receipt|bill|credit\s+note|statement|quotation|quote|proforma(?:\s+invoice)?)\s*$/i;
-const NUMBER_LABELS = /\b(?:invoice|inv|receipt|bill|order|document|doc|ref(?:erence)?)\s*(?:no\.?|number|num\.?|nr\.?|#)\s*[:#.\-]?\s*|\b(?:invoice|receipt)\s*#\s*|(?<![\w.])no\.\s+(?=[A-Za-z0-9#])/gi;
+// A heading such as "Tax Invoice", "PAYMENT RECEIPT" or "Retail Invoices/Bill" names the document, not the supplier.
+const TITLE_WORDS = /^(?:(?:tax|retail|payment|sales|cash|credit|debit|proforma|pro-forma|final|original|duplicate|copy|customer|commercial|booking)\s+)*(?:invoices?|receipts?|bills?|notes?|memo|statements?|quotations?|quotes?|vouchers?|confirmation)(?:\s*[/&,-]\s*(?:(?:tax|retail|payment|sales|cash|credit|debit|proforma|final|original|duplicate|copy|customer)\s+)*(?:invoices?|receipts?|bills?|notes?|memo|statements?))*\s*$/i;
+const SELLER_LABEL = /^(?:sold\s*by|seller|supplier|vendor|billed\s*by|issued\s*by|from|company)$/i;
+const NUMBER_LABELS = /\b(?:invoice|inv|receipt|bill|order|document|doc|ref(?:erence)?)\s*(?:no\.?|number|num\.?|nr\.?|#)\s*[:#.\-]?\s*|\b(?:invoice|receipt)\s*#\s*|^\s*no\.\s+(?=[A-Za-z0-9#])/gi;
 const ISSUE_LABEL = /\b(?:invoice\s*date|date\s*of\s*issue|issue\s*date|issued(?:\s*on)?|receipt\s*date|(?<!due\s)(?<!payment\s)(?<!due\s*)date)\b\s*[:.\-]?\s*/gi;
+// An explicit invoice/issue date beats a bare "Date" (which may be an order or ship date printed earlier on the page).
+const ISSUE_STRONG = /\b(?:invoice\s*date|date\s*of\s*issue|issue\s*date|issued(?:\s*on)?|receipt\s*date)\b\s*[:.\-]?\s*/gi;
 const DUE_LABEL = /\b(?:due\s*date|payment\s*due(?:\s*date)?|due\s*on|pay\s*by)\b\s*[:.\-]?\s*/gi;
 const SUBTOTAL_LABEL = /\bsub\s*-?\s*total\b/i;
 const TAX_LABEL = /\b(?:vat|gst|sales\s*tax|tax)\b/i;
 const TOTAL_LABEL = /\b(?:grand\s*total|total\s*(?:due|amount|payable)|amount\s*(?:due|payable)|balance\s*due|total)\b/i;
-const BILL_TO = /\b(?:bill(?:ed)?\s*to|sold\s*to|customer|client)\b\s*[:.\-]?\s*/i;
+const BILL_TO = /\b(?:bill(?:ed)?\s*to|sold\s*to|customer(?!\s*(?:care|support|service|copy|no|number|id|ref))|client(?!\s*(?:no|number|id|ref)))\b\s*[:.\-]?\s*/i;
 const RECEIPT_SKIP = /\b(?:total|sub\s*-?\s*total|tax|vat|gst|change|cash|card|visa|mastercard|amex|debit|credit|tender(?:ed)?|balance|thank|terminal|cashier|receipt|auth|approval)\b/i;
 
 // One amount as printed: optional sign/parenthesis, optional currency code/symbol, digits with grouping.
-const AMOUNT_RE = /[-(]?\s*(?:[A-Z]{3}\s*)?[$€£¥]?\s*\d{1,3}(?:[  ' ]\d{3})+(?:[.,]\d+)?\)?(?:\s*[A-Z]{3}\b)?|[-(]?\s*(?:[A-Z]{3}\s*)?[$€£¥]?\s*\d[\d.,]*\)?(?:\s*[A-Z]{3}\b)?/;
+const AMOUNT_RE = /[-(]?\s*(?:[A-Z]{3}\s*|Rs\.?\s*)?[$€£¥₹]?\s*\d{1,3}(?:[  ' ]\d{3})+(?:[.,]\d+)?\)?(?:\s*[A-Z]{3}\b)?|[-(]?\s*(?:[A-Z]{3}\s*|Rs\.?\s*)?[$€£¥₹]?\s*\d[\d.,]*\)?(?:\s*[A-Z]{3}\b)?/;
 const AMOUNT_ANCHORED = new RegExp(`^[\\s:.\\-]*(${AMOUNT_RE.source})`);
 const AMOUNT_TOKEN = /^[-(]?(?:[A-Z]{3}\s?)?[$€£¥]?\d[\d.,]*\)?(?:\s?[A-Z]{3})?$/;
 const PLAIN_QTY = /^\d+(?:[.,]\d+)?$/;
@@ -92,8 +96,15 @@ function topBlock(pages) {
   if (!pg) return null;
   for (const line of pg.lines.slice(0, 6)) {
     for (const seg of line.segments) {
-      const t = line.text.slice(seg.start, seg.end).trim();
-      if (/\p{L}{2,}/u.test(t) && !TITLE_WORDS.test(t) && !/\d{3,}/.test(t)) return { page: pg.index, line, seg, text: t };
+      let t = line.text.slice(seg.start, seg.end).trim();
+      let start = seg.start;
+      const lab = /^([A-Za-z][A-Za-z ]{1,24}?)\s*:\s*(.*)$/.exec(t); // "Sold By : Acme Ltd." -> the value; "Guest Name: Sanjay" -> someone else, skip
+      if (lab) {
+        if (!SELLER_LABEL.test(lab[1])) continue;
+        t = lab[2].trim();
+        start = seg.start + seg.end - seg.start - lab[2].length;
+      }
+      if (/\p{L}{2,}/u.test(t) && !TITLE_WORDS.test(t) && !/\d{3,}/.test(t)) return { page: pg.index, line, seg: { start, end: seg.end }, text: t.replace(/[,;]+$/, '') };
     }
   }
   return null;
@@ -328,7 +339,7 @@ export function extractDocument({ result, docType }) {
   f.supplier = supplierField(pages) ?? emptyField();
   if (docType === 'invoice') f.customer = customerField(pages) ?? emptyField();
   f.number = numberField(pages) ?? emptyField();
-  f.issueDate = dateField(pages, ISSUE_LABEL)
+  f.issueDate = dateField(pages, ISSUE_STRONG) ?? dateField(pages, ISSUE_LABEL)
     ?? (docType === 'receipt' ? firstDate(pages) : null) ?? emptyField();
   if (docType === 'invoice') f.dueDate = dateField(pages, DUE_LABEL) ?? emptyField();
 

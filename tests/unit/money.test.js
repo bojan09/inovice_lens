@@ -82,3 +82,14 @@ test('integer minor-unit arithmetic', () => {
   assert.equal(percentOfMinor(5, '10'), 1); // 0.5 -> 1
   assert.throws(() => multiplyMinor(1, '1e3'), TypeError);
 });
+
+// ---- found on real-world documents (invoice2data samples), generic English behaviour
+import { detectCurrencies as _detect, parseAmount as _parse } from '../../js/money.js';
+test('currency detection: "All" is an English word, not the lek; rupee forms are recognised', () => {
+  assert.deepEqual(_detect('Note : All Payment to be made in favor of Oravel'), []);
+  assert.deepEqual(_detect('ALL 1,200.00'), ['ALL']);
+  assert.deepEqual(_detect('Grand Total Rs 1939'), ['INR']);
+  assert.deepEqual(_detect('Rs.1,939.00'), ['INR']);
+  assert.deepEqual(_detect('₹ 250'), ['INR']);
+  assert.equal(_parse('Rs 1939').minor, 193900);
+});

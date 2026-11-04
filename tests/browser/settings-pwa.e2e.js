@@ -365,3 +365,35 @@ test('manifest + icons are served with the right types; the page declares them',
   assert.equal(r.themes.length, 2); assert.equal(r.apple, true);
   await context.close();
 });
+
+// ---- install: Chrome's own installability verdict + the in-app install path driven by a synthetic beforeinstallprompt
+test('install: Chromium reports no installability errors, and the Settings install button works end to end', async () => {
+  const { page, context } = await fresh();
+  const cdp = await context.newCDPSession(page);
+  await page.waitForFunction(() => navigator.serviceWorker?.controller || navigator.serviceWorker?.ready);
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  const { installabilityErrors } = await cdp.send('Page.getInstallabilityErrors');
+  assert.deepEqual(installabilityErrors, [], `Chromium installability errors: ${JSON.stringify(installabilityErrors)}`);
+  const { url, errors, parsed } = await cdp.send('Page.getAppManifest');
+  assert.ok(url.endsWith('manifest.webmanifest'));
+  assert.deepEqual(errors, []);
+  assert.equal(parsed?.display ?? null, null, 'raw manifest is parsed by Chromium'); // `parsed` carries only validation state; display is checked on the file below
+  assert.equal(JSON.parse(readFileSync(join(process.cwd(), 'manifest.webmanifest'), 'utf8')).display, 'standalone');
+
+  await go(page, '#/settings/storage');
+  assert.equal(await page.locator('#pwa-install').isHidden(), true, 'no install button before the browser offers an install');
+  // The real event cannot be forced headless; dispatch one shaped like it (prompt() + userChoice) to exercise our handling.
+  await page.evaluate(() => {
+    const e = new Event('beforeinstallprompt', { cancelable: true });
+    window.__prompted = 0;
+    e.prompt = async () => { window.__prompted += 1; };
+    e.userChoice = Promise.resolve({ outcome: 'accepted' });
+    window.dispatchEvent(e);
+  });
+  await page.waitForSelector('#pwa-install:not([hidden])');
+  await page.click('#pwa-install');
+  await page.waitForFunction(() => window.__prompted === 1);
+  await page.waitForSelector('#pwa-install', { state: 'hidden' });
+  assert.match(await page.locator('.toast, [role="status"]').allTextContents().then((t) => t.join(' ')), /Installing InvoiceLens/);
+  await context.close();
+});

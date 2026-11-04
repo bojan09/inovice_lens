@@ -124,3 +124,37 @@ The reference is an AI-rendered composite, so parity is assessed by measured geo
 | screenshot/e2e review | (Phase 5) several mobile layout and contrast issues | see `docs/PHASE5.md` |
 | static review | dead CSS (`.spinner`, `.soon`), stale comments, "Phase N" promises in the UI | removed / rewritten; Google Sheets wording now says CSV |
 | test authoring | several test helpers raced on navigation; one assertion assumed Phase-2 placeholders | tests corrected (no product change) |
+
+---
+
+## Post-Phase-6 hardening (follow-up to the "unverified / limits" lists)
+
+What was changed, what was measured, and what is still impossible here. Nothing below is a deployment.
+
+### Fixed
+
+| Item | What was done | Evidence |
+|---|---|---|
+| Main-thread stalls | Heavy pixel loops are time-sliced (`js/recognition/yield.js`, `preprocessAsync.js`), canvas read/write is banded, the viewer paint is banded with exact right-angle transforms, viewer bitmap 4 MP → 2.5 MP, processing canvases created with `willReadFrequently`. | Same core journey at 390×844 with 4× CPU throttle (`node scripts/profile-journey.mjs`): longest task **919 ms → 230–360 ms** across runs (run-to-run noise is large). Sliced code is byte-identical to the synchronous code (`tests/unit/preprocess-async.test.js`). Not zero: one `drawImage` of the decoded photo (`imageEngine.load`) and PDF/page decode cannot be sliced. |
+| Install prompt "not triggerable" | Test asserts Chromium's own `Page.getInstallabilityErrors` is empty and the manifest has no errors, then fires a synthetic `beforeinstallprompt` to drive the Settings button end to end. | `settings-pwa.e2e.js` last test. The *real* browser prompt and the OS install dialog still cannot be exercised headless. |
+| Hosting headers / compression | `node scripts/serve.js --prod` (brotli/gzip, ETag/304, revalidating shell, 1-day vendor/assets cache); `deploy/_headers` (Netlify, Cloudflare Pages), `deploy/vercel.json`, `deploy/nginx.conf.example` with the same CSP + security headers. | `tests/serve-prod.test.js`. Lighthouse mobile on prod mode: 100/100/100/100, transfer **498 KiB → 182 KiB**, FCP/LCP 1.1 s (dev server: 99/100/100/100, 1.7 s). Config files were syntax-checked (`vercel.json` parsed) but **not run on the real hosts**. |
+| Real WebKit never run | WebKitGTK (Ubuntu apt) driven by Selenium under Xvfb: `tests/webkit/smoke.py`, `tests/webkit/ocr_journey.py`. | App loads, hash routing works, IndexedDB / Service Worker / WebAssembly / OffscreenCanvas present, a corpus PNG was recognised (94.9 % mean OCR confidence) and the editor filled the supplier, customer, number, dates, subtotal, tax and total. It is WebKitGTK, not Safari/iOS: same engine family, different platform layer. Manual script, not in `npm test` (needs apt packages). |
+| Real-document accuracy only synthetic | Six real public PDFs (invoice2data samples; **not committed**) were run through the app and compared by eye with `pdftotext`. Four bugs of general English behaviour were fixed with regression tests: the word "All" detected as the lek (`ALL`), rupee (`Rs`, `₹`) not understood, document headings ("PAYMENT RECEIPT", "Retail Invoices/Bill") and `Guest Name:`/`Customer Care` lines taken as supplier/customer, an earlier "Order Date" winning over "Invoice Date". | Synthetic eval unchanged (98.2 % micro F1, identical before/after). Real-document result below. |
+
+### Real-document result (honest, tiny sample)
+
+Six documents, three of them non-English (Dutch, French ×2, German-looking hosting invoice) which is **out of scope** (the product is English-only) and showed nothing useful: the fields stay empty or wrong. Of the two English-ish documents after the fixes:
+
+- Flipkart invoice: supplier ✓, issue date ✓, total ✓; customer left empty (was wrong), number empty (document has only an "Order ID").
+- OYO receipt: type ✓, date ✓, currency INR ✓, total `Rs 1939` ✓; supplier **wrong** ("Hotel Details", a section heading).
+
+Six documents prove nothing statistically. Treat real-world accuracy as **unknown but visibly worse than the synthetic 98 %**: supplier detection is a first-line heuristic and every guessed field is already flagged "Check it" in the editor.
+
+### Still not fixable here
+
+- **Firefox**: Ubuntu's `firefox` is a snap stub; Mozilla download hosts are blocked. Never run.
+- **Real Safari/iOS, real phones, installed-PWA behaviour, real screen readers (NVDA/JAWS/VoiceOver/TalkBack)**: not available. axe-core, keyboard tests and device emulation remain the only evidence.
+- **Word / Excel / Google Sheets opening the files**: not available. Files are validated with python-docx, openpyxl, LibreOffice and poppler only.
+- **Deployment**: not done (needs your decision and hosting account). The configs above are ready.
+- **OCR on throttled CPUs**: CPU throttling does not slow the OCR worker, so recognition times are not a phone estimate. Unchanged.
+- **First open offline / ~11.5 MB of vendored files**: inherent to a PWA that must download its program files once.

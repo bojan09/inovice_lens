@@ -341,3 +341,26 @@ test('extract: invoice number after a bare "No." label keeping a leading "#"', (
   const c = extractDocument({ result: resultOf(layout([{ y: 10, x: 10, text: 'Shop Ltd' }, { y: 60, x: 10, text: 'Phone no. is on file' }])), docType: 'invoice' });
   assert.equal(c.fields.number.value, '', '"no." inside a sentence is not an invoice number');
 });
+
+// ------------------------------------------------------------------ regressions found on real-world documents (invoice2data samples)
+test('extract: headings are not suppliers; "Sold By" is; explicit Invoice Date beats an earlier bare Date; "Customer Care" is not the customer; Rs amounts read', () => {
+  const items = layout([
+    { y: 10, x: 300, text: 'Retail Invoices/Bill' },
+    { y: 40, x: 0, text: 'Sold By : WS Retail Services Pvt. Ltd.,' },
+    { y: 70, x: 0, text: 'Order Date: 15-10-2015' },
+    { y: 90, x: 0, text: 'Invoice Date: 20-10-2015' },
+    { y: 110, x: 0, text: 'Customer Care : 1800 208 9898' },
+    { y: 140, x: 0, text: 'Grand Total' }, { y: 140, x: 500, text: 'Rs 1939' },
+  ]);
+  const ex = extractDocument({ result: resultOf(items), docType: 'invoice' });
+  assert.equal(ex.fields.supplier.value, 'WS Retail Services Pvt. Ltd.');
+  assert.equal(ex.fields.issueDate.value, '2015-10-20');
+  assert.equal(ex.fields.customer.value, '', 'a support-line is not a customer');
+  assert.equal(ex.fields.total.value, 'Rs 1939');
+  assert.equal(ex.fields.currency.value, 'INR');
+});
+
+test('extract: "PAYMENT RECEIPT" / "Tax Invoice" headings are skipped as supplier; a "Guest Name:" line is not a supplier', () => {
+  const items = layout([{ y: 10, x: 0, text: 'PAYMENT RECEIPT' }, { y: 40, x: 0, text: 'Guest Name: Sanjay' }, { y: 70, x: 0, text: 'Oravel Stays' }]);
+  assert.equal(extractDocument({ result: resultOf(items), docType: 'receipt' }).fields.supplier.value, 'Oravel Stays');
+});

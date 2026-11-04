@@ -1,0 +1,25 @@
+# Netlify / Cloudflare Pages. Copy to the published root as "_headers". Compression (br/gzip) is automatic on both.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+/index.html
+  Cache-Control: no-cache
+/sw.js
+  Cache-Control: no-cache
+  Service-Worker-Allowed: /
+/manifest.webmanifest
+  Cache-Control: no-cache
+  Content-Type: application/manifest+json
+/js/*
+  Cache-Control: no-cache
+/css/*
+  Cache-Control: no-cache
+/vendor/*
+  Cache-Control: public, max-age=86400
+/assets/*
+  Cache-Control: public, max-age=86400

@@ -5,7 +5,7 @@
  * same-origin GET requests for a fixed allow-list of static paths. Everything else (POST, blob:, data:, other origins, any
  * path not listed) goes straight to the network untouched, so nothing a user opens can end up in a cache from here.
  */
-const APP_VERSION = '71bb96e7fa04';
+const APP_VERSION = '63895073e96c';
 const SHELL_CACHE = `invoicelens-shell-${APP_VERSION}`;
 const VENDOR_CACHE = 'invoicelens-vendor-32fa48cdd267';
 const SHELL = [

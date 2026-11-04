@@ -24,13 +24,18 @@ export function currencyExponent(currency) {
 
 // Order matters only for readability. Symbols map to a single currency; "$" is
 // reported as USD (other dollar currencies need an explicit code).
-const CODES = ['EUR', 'MKD', 'USD', 'GBP', 'CHF', 'RSD', 'BGN', 'JPY', 'CAD', 'AUD', 'ALL', 'KRW'];
+const CODES = ['EUR', 'MKD', 'USD', 'GBP', 'CHF', 'RSD', 'BGN', 'JPY', 'CAD', 'AUD', 'ALL', 'KRW', 'INR'];
+// "ALL" is also an ordinary English word ("All payments..."): it only counts as the lek when it touches a number.
+const NEEDS_NUMBER = new Set(['ALL']);
 const SYMBOLS = [
   ['€', 'EUR'],
   ['£', 'GBP'],
   ['$', 'USD'],
   ['¥', 'JPY'],
+  ['₹', 'INR'],
 ];
+const RUPEE_WORD = /(?<![A-Za-z])Rs\.?(?=\s?\d)/g; // "Rs 1939", "Rs.1,939.00"
+
 
 const GROUP_SPACES = /[    ']|’/;
 
@@ -39,9 +44,13 @@ function extractCurrency(input) {
   let text = input;
   const found = new Set();
   for (const code of CODES) {
-    const re = new RegExp(`(?<![A-Za-z])${code}(?![A-Za-z])`, 'gi');
+    const bare = `(?<![A-Za-z])${code}(?![A-Za-z])`;
+    const re = NEEDS_NUMBER.has(code) ? new RegExp(`${bare}(?=\\s?\\d)|(?<=\\d\\s?)${bare}`, 'g') : new RegExp(bare, 'gi');
     text = text.replace(re, () => (found.add(code), ' '));
   }
+  if (RUPEE_WORD.test(text)) { found.add('INR'); }
+  RUPEE_WORD.lastIndex = 0;
+  text = text.replace(RUPEE_WORD, ' ');
   for (const [sym, code] of SYMBOLS) {
     if (text.includes(sym)) {
       found.add(code);

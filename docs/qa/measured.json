@@ -28,12 +28,12 @@
     "network": "1.6 Mbit/s down, 150 ms latency",
     "viewport": "390x844 touch",
     "caveat": "CDP CPU throttling slows the MAIN thread only. OCR runs in a Web Worker and OCR files may come from the service-worker cache, so recognition times here are NOT a phone estimate; the main-thread figures (open editor, typing, long tasks) are the meaningful ones.",
-    "recognizeColdMs": 3242,
-    "recognizeWarmMs": 1183,
-    "openEditorMs": 414,
-    "typeMs": 51,
-    "firstExportReadyMs": 535,
+    "recognizeColdMs": 2681,
+    "recognizeWarmMs": 1141,
+    "openEditorMs": 425,
+    "typeMs": 56,
+    "firstExportReadyMs": 613,
     "longTasksOver200ms": 1,
-    "longestTaskMs": 274
+    "longestTaskMs": 343
   }
 }
