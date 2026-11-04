@@ -143,7 +143,7 @@ What was changed, what was measured, and what is still impossible here. Nothing 
 
 ### Real-document result (honest, tiny sample)
 
-Six documents, three of them non-English (Dutch, French ×2, German-looking hosting invoice) which is **out of scope** (the product is English-only) and showed nothing useful: the fields stay empty or wrong. Of the two English-ish documents after the fixes:
+Six documents, four of them non-English (Dutch, French ×2, one hosting invoice I did not read closely, likely German) which is **out of scope** (the product is English-only) and showed nothing useful: the fields stay empty or wrong. Of the two English-ish documents after the fixes:
 
 - Flipkart invoice: supplier ✓, issue date ✓, total ✓; customer left empty (was wrong), number empty (document has only an "Order ID").
 - OYO receipt: type ✓, date ✓, currency INR ✓, total `Rs 1939` ✓; supplier **wrong** ("Hotel Details", a section heading).
