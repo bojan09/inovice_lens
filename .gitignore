@@ -4,3 +4,4 @@ node_modules/
 corpus/docs/
 corpus/predictions/
 .omc/
+dist/
