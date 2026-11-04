@@ -4,10 +4,11 @@
 
 import { el, icon } from '../dom.js';
 import { refRect, itemRect, rotateNormRect } from '../../doc/geometry.js';
-import { paint } from './pageSource.js';
+import { paintAsync } from './pageSource.js';
+import { createSlicer } from '../../recognition/yield.js';
 
 const ZOOMS = [0.5, 0.75, 1, 1.25, 1.5, 2, 3];
-const VIEW_PIXELS = 4_000_000;
+const VIEW_PIXELS = 2_500_000; // ~1760x1420: sharp at full width on a phone and 2x zoom; keeps one paint short
 
 export function createViewer({ onRotate, onMove, onGoto }) {
   let ctx = null; // { doc, result, pageSource }
@@ -102,7 +103,7 @@ export function createViewer({ onRotate, onMove, onGoto }) {
     try {
       const base = await ctx.pageSource.render(pg.source, VIEW_PIXELS);
       if (token !== renderToken) return;
-      paint(canvas, base, pg.rotation);
+      if (!(await paintAsync(canvas, base, pg.rotation, { slicer: createSlicer(8), isCurrent: () => token === renderToken }))) return;
       stage.style.aspectRatio = `${canvas.width} / ${canvas.height}`;
       paintedKey = key;
       busy.hidden = true;

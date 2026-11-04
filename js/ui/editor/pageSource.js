@@ -6,6 +6,39 @@ import { releaseCanvas } from '../../recognition/canvasOps.js';
 
 const BIG_CACHE = 2;
 
+function applyOrientation(ctx, target, src, d) {
+  const W = src.width; const H = src.height;
+  if (d === 90) ctx.setTransform(0, 1, -1, 0, H, 0);
+  else if (d === 180) ctx.setTransform(-1, 0, 0, -1, W, H);
+  else if (d === 270) ctx.setTransform(0, -1, 1, 0, 0, W);
+  else if (d !== 0) { ctx.translate(target.width / 2, target.height / 2); ctx.rotate((d * Math.PI) / 180); ctx.translate(-W / 2, -H / 2); }
+}
+
+const PAINT_ROWS = 512;
+
+/**
+ * Same result as paint(), but copies the bitmap in horizontal bands and hands the thread back between
+ * bands, so showing a 4 MP page never blocks input for one long task. `isCurrent()` lets the caller
+ * abandon a stale paint (page changed while we were copying).
+ */
+export async function paintAsync(target, src, deg = 0, { slicer, isCurrent = () => true } = {}) {
+  const d = ((deg % 360) + 360) % 360;
+  const swap = d === 90 || d === 270;
+  target.width = swap ? src.height : src.width;
+  target.height = swap ? src.width : src.height;
+  const ctx = target.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+  if (d !== 0) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, target.width, target.height); }
+  applyOrientation(ctx, target, src, d);
+  for (let y = 0; y < src.height; y += PAINT_ROWS) {
+    const rows = Math.min(PAINT_ROWS, src.height - y);
+    ctx.drawImage(src, 0, y, src.width, rows, 0, y, src.width, rows);
+    if (slicer) await slicer.tick();
+    if (!isCurrent()) return false;
+  }
+  return true;
+}
+
 export function paint(target, src, deg = 0) {
   const d = ((deg % 360) + 360) % 360;
   const swap = d === 90 || d === 270;
@@ -13,12 +46,20 @@ export function paint(target, src, deg = 0) {
   target.height = swap ? src.width : src.height;
   const ctx = target.getContext('2d');
   ctx.save();
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(0, 0, target.width, target.height);
-  ctx.translate(target.width / 2, target.height / 2);
-  ctx.rotate((d * Math.PI) / 180);
-  ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(src, -src.width / 2, -src.height / 2);
+  ctx.imageSmoothingEnabled = false; // always a 1:1 copy (right-angle rotation): resampling would only cost time
+  if (d === 0) {
+    ctx.drawImage(src, 0, 0); // source canvases are already opaque, no white fill needed
+  } else {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, target.width, target.height);
+    // exact integer transforms for 90/180/270 instead of a generic rotate() about the centre
+    const W = src.width; const H = src.height;
+    if (d === 90) ctx.setTransform(0, 1, -1, 0, H, 0);
+    else if (d === 180) ctx.setTransform(-1, 0, 0, -1, W, H);
+    else if (d === 270) ctx.setTransform(0, -1, 1, 0, 0, W);
+    else { ctx.translate(target.width / 2, target.height / 2); ctx.rotate((d * Math.PI) / 180); ctx.translate(-W / 2, -H / 2); }
+    ctx.drawImage(src, 0, 0);
+  }
   ctx.restore();
 }
 

@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-11-03",
+  "measuredAt": "2026-11-04",
   "machine": "headless Chromium (Playwright) in a cloud container; not a phone",
   "visualParity_light": {
     "sidebarPx": 200,
@@ -28,12 +28,12 @@
     "network": "1.6 Mbit/s down, 150 ms latency",
     "viewport": "390x844 touch",
     "caveat": "CDP CPU throttling slows the MAIN thread only. OCR runs in a Web Worker and OCR files may come from the service-worker cache, so recognition times here are NOT a phone estimate; the main-thread figures (open editor, typing, long tasks) are the meaningful ones.",
-    "recognizeColdMs": 2915,
-    "recognizeWarmMs": 1341,
-    "openEditorMs": 782,
-    "typeMs": 75,
-    "firstExportReadyMs": 520,
-    "longTasksOver200ms": 6,
-    "longestTaskMs": 526
+    "recognizeColdMs": 3242,
+    "recognizeWarmMs": 1183,
+    "openEditorMs": 414,
+    "typeMs": 51,
+    "firstExportReadyMs": 535,
+    "longTasksOver200ms": 1,
+    "longestTaskMs": 274
   }
 }
